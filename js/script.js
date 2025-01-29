@@ -2,6 +2,7 @@ const pills = document.querySelectorAll('.pill');
 const dropBoxes = document.querySelectorAll('.drop-box');
 const colors = ['#007bff', '#28a745', '#ffc107', '#fd7e14', '#dc3545', '#6f42c1'];
 
+// Initialize pill display and event listeners
 pills.forEach(pill => {
     const textNode = pill.childNodes[0]; // Get the first child node (text node)
     if (textNode && textNode.nodeType === Node.TEXT_NODE) {
@@ -10,28 +11,30 @@ pills.forEach(pill => {
     pill.addEventListener('dragstart', dragStart);
     pill.addEventListener('dblclick', showColorPicker);
     pill.dataset.colorIndex = 0; // Initialize color index
-    pill.style.display = 'none';	
+    pill.style.display = 'none'; // Initially hide pills
 });
 
+// Event listener for dropdown change to filter pills
+document.getElementById('groupSelector').addEventListener('change', function() {
+    const selectedGroup = this.value; // Get selected department/group
+
+    pills.forEach(pill => {
+        // Show the pill if it's in the selected department or show all when 'all' is selected
+        if (selectedGroup === 'all' || pill.getAttribute('data-group') === selectedGroup) {
+            pill.style.display = 'block'; // Show the pill
+        } else {
+            pill.style.display = 'none'; // Hide the pill
+        }
+    });
+});
+
+// Drag and drop setup for pills
 dropBoxes.forEach(box => {
     box.addEventListener('dragover', dragOver);
     box.addEventListener('drop', drop);
 });
 
-document.getElementById('groupSelector').addEventListener('change', function() {
-    const selectedGroup = this.value; // Get selected department/group
-    const pills = document.querySelectorAll('.pill'); // Get all pill elements
-
-    pills.forEach(pill => {
-        // Show the pill if it's in the selected department or show all when 'all' is selected
-        if (selectedGroup === 'all' || pill.getAttribute('data-group') === selectedGroup) {
-            pill.style.display = 'block'; // Show the course
-        } else {
-            pill.style.display = 'none'; // Hide the course
-        }
-    });
-});
-
+// Export to PDF functionality
 document.getElementById('export').addEventListener('click', () => {
     // Hide the button
     document.getElementById('export').style.display = 'none';
@@ -70,25 +73,23 @@ document.getElementById('export').addEventListener('click', () => {
     });
 });
 
+// Export to Excel functionality
 document.getElementById('export-excel').addEventListener('click', () => {
     const data = [];
-	const firstListItemText = document.querySelector('ul li').innerText;
+    const firstListItemText = document.querySelector('ul li').innerText;
     dropBoxes.forEach(box => {
         const pills = box.querySelectorAll('.pill');
         pills.forEach(pill => {
             const seasonLabel = document.querySelector(`.drop-label[data-season="${box.dataset.season}"]`).innerText;
             const timeLabel = document.querySelector(`.drop-label[data-time="${box.dataset.time}"]`).innerText;
             const pillColor = pill.style.backgroundColor;
-	    const pillText = pill.querySelector(".pillLabel");
-            console.log('Pill Color:', pillColor);
+            const pillText = pill.querySelector(".pillLabel");
             const colorLabelElement = Array.from(document.querySelectorAll('ul li')).find(li => li.style.color === pillColor);
-            console.log('Color Label Element:', colorLabelElement);
             const colorLabel = colorLabelElement ? colorLabelElement.innerText : firstListItemText;
-            console.log('Color Label:', colorLabel);
             data.push({
                 Session: seasonLabel,
                 Time: timeLabel,
-                Course: pillText.innerText,  //pill.innerText,
+                Course: pillText.innerText,
                 Category: colorLabel
             });
         });
@@ -112,6 +113,7 @@ document.getElementById('export-excel').addEventListener('click', () => {
     XLSX.writeFile(workbook, fileName);
 });
 
+// Drag functions
 function dragStart(e) {
     e.dataTransfer.setData('text/plain', e.target.outerHTML);
 }
@@ -133,10 +135,11 @@ function drop(e) {
         addDeleteButton(pillElement);
         e.target.appendChild(pillElement);
     } else {
-        e.dataTransfer.clearData(); // Clear data if dropped outside drop box - doesn't work
+        e.dataTransfer.clearData(); // Clear data if dropped outside drop box
     }
 }
 
+// Color picker functionality for pills
 function showColorPicker(e) {
     if (e.target.classList.contains('delete-btn')) return; // Ignore delete button clicks
     const pill = e.target;
@@ -146,6 +149,7 @@ function showColorPicker(e) {
     pill.dataset.colorIndex = currentIndex;
 }
 
+// Delete button functionality
 function addDeleteButton(pill) {
     const deleteBtn = document.createElement('button');
     deleteBtn.innerText = 'x';
@@ -154,14 +158,7 @@ function addDeleteButton(pill) {
     pill.appendChild(deleteBtn);
 }
 
-function addHandle(pill) {
-    const handle = document.createElement('button');
-    handle.innerText = '+';
-    handle.classList.add('handle');
-    //handle.addEventListener('click', deletePill);
-    pill.appendChild(handle);
-}
-
+// Handle delete of pill
 function deletePill(e) {
     const pill = e.target.parentElement;
     const parentBox = pill.parentElement;
