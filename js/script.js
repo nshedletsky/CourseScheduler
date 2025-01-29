@@ -28,7 +28,9 @@ document.addEventListener("DOMContentLoaded", () => {
         pills.forEach(pill => {
             // Show the pill if it's in the selected department or show all when 'all' is selected
             if (selectedGroup === 'all' || pill.getAttribute('data-group') === selectedGroup) {
-                pill.style.display = 'block'; // Show the pill
+                if (!pill.classList.contains('used')) { // Hide the used ones
+                    pill.style.display = 'block'; // Show the pill
+                }
             } else {
                 pill.style.display = 'none'; // Hide the pill
             }
@@ -138,6 +140,12 @@ document.addEventListener("DOMContentLoaded", () => {
             pillElement.addEventListener('dblclick', showColorPicker);
             pillElement.dataset.colorIndex = 0; // Initialize color index for new pills
             addDeleteButton(pillElement);
+
+            // Mark the pill as used when it's dropped
+            pillElement.classList.add('used'); // Add "used" class
+
+            // Hide pill in the list of available pills
+            pillElement.style.display = 'none'; // Hide the pill from the pill list
             e.target.appendChild(pillElement);
         } else {
             e.dataTransfer.clearData(); // Clear data if dropped outside drop box
