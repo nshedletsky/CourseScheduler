@@ -37,7 +37,6 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    // Rest of your existing code
     dropBoxes.forEach(box => {
         box.addEventListener('dragover', dragOver);
         box.addEventListener('drop', drop);
@@ -122,7 +121,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Drag functions
     function dragStart(e) {
+        // Prevent dragging more than one pill
         e.dataTransfer.setData('text/plain', e.target.outerHTML);
+        e.target.style.opacity = '0.5'; // Make the pill appear semi-transparent during drag
     }
 
     function dragOver(e) {
@@ -147,6 +148,7 @@ document.addEventListener("DOMContentLoaded", () => {
             // Hide pill in the list of available pills
             pillElement.style.display = 'none'; // Hide the pill from the pill list
             e.target.appendChild(pillElement);
+            pillElement.style.opacity = '1'; // Reset pill opacity
         } else {
             e.dataTransfer.clearData(); // Clear data if dropped outside drop box
         }
