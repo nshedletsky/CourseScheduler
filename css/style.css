@@ -1,32 +1,153 @@
 body {
     font-family: Arial, sans-serif;
-    margin: 20px;
-    padding: 0;
-    background-color: #f4f4f4;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    height: 100vh;
+    margin: 0;
 }
 
-table {
+#pdf-content {
+    display: flex;
     width: 100%;
-    border-collapse: collapse;
-    margin-top: 20px;
-    background: #fff;
+    max-width: 1200px; /* Set a maximum width for the entire content */
 }
 
-table, th, td {
-    border: 1px solid #ddd;
-}
 
-th, td {
+.sidebar {
+    width: 150px;
     padding: 10px;
-    text-align: left;
+    font-size: small;
+    background-color: #f8f9fa;
+    border-right: 2px solid #007bff;
+    box-sizing: border-box;
 }
 
-th {
+.main-content {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    max-width: 1050px;
+    width: calc(100% - 150px); /* Adjust width to account for sidebar */
+    padding: 0px 20px 10px 20px;
+    box-sizing: border-box;
+}
+
+.container {
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: column;
+    align-items: center;
+}
+
+.pill-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.pill {
+    min-width: 50px;
+    padding: 10px 10px 10px 12px;
+    margin: 1px;
     background-color: #007bff;
     color: white;
+    border-radius: 50px;
+    cursor: grab;
+    //flex: 0 0 auto; /* Prevents the pills from expanding */
+    position: relative;
 }
 
-select {
+.pill .delete-btn {
+    position: absolute;
+    top: 0;
+    right: 0;
+    background: black;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    width: 20px;
+    height: 20px;
+    display: none;
+}
+
+.pill:hover .delete-btn {
+    display: block;
+}
+
+.pill .pillLabel {
+    border-radius: 25px;
+    padding: 3px 7px 3px 7px;
+    margin: 0px 0px 0px 4px;
+    background: white;
+    color: black;
+    font-size: 75%;
+    cursor: text;
+
+
+}
+
+.drop-container {
+    display: grid;
+    grid-template-columns: auto repeat(5, 1fr); /* 5 columns for Fall, Spring, Summer */
+    grid-template-rows: auto repeat(1, 1fr); /* rows? */
+    gap: 10px;
+}
+
+.drop-label {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    max-height: 20px;
     padding: 5px;
-    margin-top: 10px;
+    background-color: #f0f0f0;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+
+}
+
+.drop-box {
+    min-width: 100px;
+    min-height: 50px;
+    max-width: 200px;
+    //max-height: 200px;
+    display: flex;
+    flex-direction: column; /* Change to column layout */
+    padding: 5px;
+    box-sizing: border-box;
+}
+
+.fa {
+    border: 2px dashed orange;
+}
+
+.sp {
+    border: 2px dashed green;
+}
+
+.su {
+    border: 2px dashed purple;
+}
+
+.pill .pillLabel::after {
+    content: attr(label); /* Use the label attribute as the content */
+    position: absolute;
+    left: 0;
+    top: 100%;
+    width: 100%;
+    padding: 5px;
+    background-color: #333;
+    color: #fff;
+    text-align: center;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s;
+    z-index: 1000; /* Ensure the hover text is on top */
+}
+
+.pill .pillLabel:hover::after {
+    opacity: 1;
+    visibility: visible;
 }
