@@ -145,10 +145,11 @@ document.addEventListener("DOMContentLoaded", () => {
             // Mark the pill as used when it's dropped
             pillElement.classList.add('used'); // Add "used" class
 
-            // Hide pill in the list of available pills
-            pillElement.style.display = 'none'; // Hide the pill from the pill list
+            //Append the pill to the drop box
             e.target.appendChild(pillElement);
-            pillElement.style.opacity = '1'; // Reset pill opacity
+
+            // Remove pill from the availalbe list if needed
+            pillElement.style.display = 'block'; // Ensure it is visible in the drop box
         } else {
             e.dataTransfer.clearData(); // Clear data if dropped outside drop box
         }
