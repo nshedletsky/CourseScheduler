@@ -11,7 +11,6 @@ pills.forEach(pill => {
     pill.addEventListener('dblclick', showColorPicker);
     pill.dataset.colorIndex = 0; // Initialize color index
     pill.style.display = 'none';	
-    
 });
 
 dropBoxes.forEach(box => {
@@ -20,14 +19,15 @@ dropBoxes.forEach(box => {
 });
 
 document.getElementById('groupSelector').addEventListener('change', function() {
-    const selectedGroup = this.value;
-    const contents = document.querySelectorAll('.pill');
+    const selectedGroup = this.value; // Get selected department/group
+    const pills = document.querySelectorAll('.pill'); // Get all pill elements
 
-    contents.forEach(content => {
-        if (selectedGroup === 'all' || content.getAttribute('data-group') === selectedGroup) {
-            content.style.display = 'block';
+    pills.forEach(pill => {
+        // Show the pill if it's in the selected department or show all when 'all' is selected
+        if (selectedGroup === 'all' || pill.getAttribute('data-group') === selectedGroup) {
+            pill.style.display = 'block'; // Show the course
         } else {
-            content.style.display = 'none';
+            pill.style.display = 'none'; // Hide the course
         }
     });
 });
@@ -112,9 +112,6 @@ document.getElementById('export-excel').addEventListener('click', () => {
     XLSX.writeFile(workbook, fileName);
 });
 
-
-
-
 function dragStart(e) {
     e.dataTransfer.setData('text/plain', e.target.outerHTML);
 }
@@ -130,7 +127,7 @@ function drop(e) {
         const newPill = document.createElement('div');
         newPill.innerHTML = data;
         const pillElement = newPill.firstChild;
-	pillElement.addEventListener('dragstart', dragStart);
+        pillElement.addEventListener('dragstart', dragStart);
         pillElement.addEventListener('dblclick', showColorPicker);
         pillElement.dataset.colorIndex = 0; // Initialize color index for new pills
         addDeleteButton(pillElement);
@@ -164,7 +161,6 @@ function addHandle(pill) {
     //handle.addEventListener('click', deletePill);
     pill.appendChild(handle);
 }
-
 
 function deletePill(e) {
     const pill = e.target.parentElement;
