@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Course Scheduler</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <h1>Course Scheduling Tool</h1>
+    
+    <label for="department">Filter by Department:</label>
+    <select id="department">
+        <option value="all">All Departments</option>
+    </select>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>Course Name</th>
+                <th>Department</th>
+                <th>Semester</th>
+                <th>Time</th>
+            </tr>
+        </thead>
+        <tbody id="course-list">
+            <!-- Courses will be populated here -->
+        </tbody>
+    </table>
+    
+    <script src="js/script.js"></script>
+</body>
+</html>
