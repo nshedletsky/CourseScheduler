@@ -8,7 +8,7 @@ document.addEventListener("DOMContentLoaded", () => {
         pill.style.display = 'none'; // Hide pills initially
         const textNode = pill.childNodes[0]; // Get the first child node (text node)
         if (textNode && textNode.nodeType === Node.TEXT_NODE) {
-            textNode.nodeValue = textNode.nodeValue.replace(/^\+/, 'â‰¡');
+            textNode.nodeValue = textNode.nodeValue.replace(/^\+/, '≡');
         }
         pill.addEventListener('dragstart', dragStart);
         pill.addEventListener('dblclick', showColorPicker);
