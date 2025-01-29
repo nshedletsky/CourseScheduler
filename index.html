@@ -1,34 +1,727 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Course Scheduler</title>
-    <link rel="stylesheet" href="css/style.css">
+    <title>Flexible Schedule Builder</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.2/html2pdf.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.0/xlsx.full.min.js"></script>
 </head>
 <body>
-    <h1>Course Scheduling Tool</h1>
-    
-    <label for="department-filter">Filter by Department:</label>
-    <select id="department-filter">
-        <option value="all">All Departments</option>
-    </select>
-    
-    <table>
-        <thead>
-            <tr>
-                <th>Course Code</th>
-                <th>Course Name</th>
-                <th>Department</th>
-                <th>Semester</th>
-                <th>Time</th>
-            </tr>
-        </thead>
-        <tbody id="course-table-body">
-            <!-- Courses will be populated here -->
-        </tbody>
-    </table>
-    
+    <div id="pdf-content">
+        <div class="sidebar">
+            <h3 contenteditable="true" id="filename">Schedule Builder</h3>
+            <p contenteditable="true">Using the ≡, drag the course 'pills' from the top into the boxes below to plan sections. Double-click on the ≡ to change the pill's color (edit your color key below). Click the 'x' button to delete a section from the plan. <b>Pill text and most text on this page are <u>editable</u>, so take notes for yourself.</b>  Export the view as a pdf and/or export the pills to a table with the buttons below.</p>
+            <h4 contenteditable="true">What do <i>your</i> colors mean?</h4>
+            <ul contenteditable="false">
+                <li style="color: #007bff;" data-color="#007bff" contenteditable="true">Blue</li>
+                <li style="color: #28a745;" data-color="#28a745" contenteditable="true">Green</li>
+                <li style="color: #ffc107;" data-color="#ffc107" contenteditable="true">Yellow</li>
+                <li style="color: #fd7e14;" data-color="#fd7e14" contenteditable="true">Orange</li>
+                <li style="color: #dc3545;" data-color="#dc3545" contenteditable="true">Red</li>
+                <li style="color: #6f42c1;" data-color="#6f42c1" contenteditable="true">Purple</li>
+            </ul>
+            <button id="export" contenteditable="false">Export this View to PDF</button>
+		<br><br>
+            <button id="export-excel" contenteditable="false">Export Display Data to Excel</button>
+        </div>
+        <div class="main-content">
+
+            <div class="container">
+	    <h2 style="margin: 0px 0px 0px 20px;"><select id="groupSelector">
+<option value="X">Select Department</option>
+
+<option value='AAC'>Academic Support Center</option>
+<option value='MBUS'>Masters Business</option>
+<option value='REG'>Registrar</option>
+<option value='UART'>Creative Arts, Undergraduate</option>
+<option value='UBUS'>Business, Undergraduate</option>
+<option value='UCJU'>Criminal Justice St, Undergrad</option>
+<option value='UCOM'>Communication, Undergraduate</option>
+<option value='UCWR'>Creative Writing, Undergrad</option>
+<option value='UEDU'>Education, Undergraduate</option>
+<option value='UHSC'>Health Science, Undergraduate</option>
+<option value='ULST'>Liberal Studies, Undergraduate</option>
+<option value='UNSC'>Natural Science, Undergraduate</option>
+<option value='UNUR'>Nursing, Undergraduate</option>
+<option value='UNURR'>Nursing, Rn to Bsn</option>
+<option value='UPSY'>Psychology, Undergraduate</option>
+<option value='USWO'>Social Work, Undergraduate</option>
+
+
+	    </select></h2>
+
+                <div class="pill-container">
+
+<div class='pill' draggable='true' data-group='AAC'>+ <span class='pillLabel' contenteditable='true' label='Non-Credit Special Topics'>ARC-099</span></div>
+<div class='pill' draggable='true' data-group='AAC'>+ <span class='pillLabel' contenteditable='true' label='Successful Student Strategies'>SU-100</span></div>
+<div class='pill' draggable='true' data-group='AAC'>+ <span class='pillLabel' contenteditable='true' label='Aptitudes and Attitudes'>SU-101</span></div>
+<div class='pill' draggable='true' data-group='AAC'>+ <span class='pillLabel' contenteditable='true' label='Beyond Graduation'>SU-200</span></div>
+<div class='pill' draggable='true' data-group='AAC'>+ <span class='pillLabel' contenteditable='true' label='University Studies Math'>USM-090</span></div>
+<div class='pill' draggable='true' data-group='AAC'>+ <span class='pillLabel' contenteditable='true' label='University Studies Reading'>USR-092</span></div>
+<div class='pill' draggable='true' data-group='AAC'>+ <span class='pillLabel' contenteditable='true' label='University Studies Writing'>USW-091</span></div>
+<div class='pill' draggable='true' data-group='MBUS'>+ <span class='pillLabel' contenteditable='true' label='Auditing/Business Environment'>ACC-601</span></div>
+<div class='pill' draggable='true' data-group='MBUS'>+ <span class='pillLabel' contenteditable='true' label='Financial Accounting & Reporti'>ACC-602</span></div>
+<div class='pill' draggable='true' data-group='MBUS'>+ <span class='pillLabel' contenteditable='true' label='Regulation'>ACC-603</span></div>
+<div class='pill' draggable='true' data-group='MBUS'>+ <span class='pillLabel' contenteditable='true' label='Tax I: Individual Taxation'>ACC-615</span></div>
+<div class='pill' draggable='true' data-group='MBUS'>+ <span class='pillLabel' contenteditable='true' label='Behavioral Economics & Finance'>ECON-580</span></div>
+<div class='pill' draggable='true' data-group='MBUS'>+ <span class='pillLabel' contenteditable='true' label='Risk Managmt & Estate Planning'>FIN-610</span></div>
+<div class='pill' draggable='true' data-group='MBUS'>+ <span class='pillLabel' contenteditable='true' label='Investments & Retiremnt Plng'>FIN-675</span></div>
+<div class='pill' draggable='true' data-group='MBUS'>+ <span class='pillLabel' contenteditable='true' label='Financial Plan Development'>FIN-681</span></div>
+<div class='pill' draggable='true' data-group='MBUS'>+ <span class='pillLabel' contenteditable='true' label='Compensation & Benefits'>MBUS-610</span></div>
+<div class='pill' draggable='true' data-group='MBUS'>+ <span class='pillLabel' contenteditable='true' label='Negotiation'>MBUS-612</span></div>
+<div class='pill' draggable='true' data-group='MBUS'>+ <span class='pillLabel' contenteditable='true' label='Data Visualization & Storytell'>MBUS-614</span></div>
+<div class='pill' draggable='true' data-group='MBUS'>+ <span class='pillLabel' contenteditable='true' label='Persuasion'>MBUS-615</span></div>
+<div class='pill' draggable='true' data-group='MBUS'>+ <span class='pillLabel' contenteditable='true' label='Integrated Marketing'>MBUS-618</span></div>
+<div class='pill' draggable='true' data-group='MBUS'>+ <span class='pillLabel' contenteditable='true' label='Staffing Organizations'>MBUS-620</span></div>
+<div class='pill' draggable='true' data-group='MBUS'>+ <span class='pillLabel' contenteditable='true' label='Organizational Leadership'>MBUS-623</span></div>
+<div class='pill' draggable='true' data-group='MBUS'>+ <span class='pillLabel' contenteditable='true' label='Purpose-Driven Leadershp Globa'>MBUS-628</span></div>
+<div class='pill' draggable='true' data-group='MBUS'>+ <span class='pillLabel' contenteditable='true' label='Employment Law'>MBUS-630</span></div>
+<div class='pill' draggable='true' data-group='MBUS'>+ <span class='pillLabel' contenteditable='true' label='Intercult Comm in Workplace'>MBUS-633</span></div>
+<div class='pill' draggable='true' data-group='MBUS'>+ <span class='pillLabel' contenteditable='true' label='Interpersonal Comm in Workplac'>MBUS-638</span></div>
+<div class='pill' draggable='true' data-group='MBUS'>+ <span class='pillLabel' contenteditable='true' label='Conflict Management'>MBUS-641</span></div>
+<div class='pill' draggable='true' data-group='MBUS'>+ <span class='pillLabel' contenteditable='true' label='Performance Eval & Conflict Re'>MBUS-644</span></div>
+<div class='pill' draggable='true' data-group='MBUS'>+ <span class='pillLabel' contenteditable='true' label='Project Plan & Implementation'>MBUS-646</span></div>
+<div class='pill' draggable='true' data-group='MBUS'>+ <span class='pillLabel' contenteditable='true' label='Res Estimat, Risk Mgmt & Comm'>MBUS-647</span></div>
+<div class='pill' draggable='true' data-group='MBUS'>+ <span class='pillLabel' contenteditable='true' label='Digital Comm in Workplace'>MBUS-648</span></div>
+<div class='pill' draggable='true' data-group='MBUS'>+ <span class='pillLabel' contenteditable='true' label='Project Implemt & Mgmnt'>MBUS-649</span></div>
+<div class='pill' draggable='true' data-group='MBUS'>+ <span class='pillLabel' contenteditable='true' label='Special Topics in Bus Comm'>MBUS-650</span></div>
+<div class='pill' draggable='true' data-group='MBUS'>+ <span class='pillLabel' contenteditable='true' label='Organization Dev & Change'>MBUS-655</span></div>
+<div class='pill' draggable='true' data-group='MBUS'>+ <span class='pillLabel' contenteditable='true' label='Nonprofit Management'>MBUS-656</span></div>
+<div class='pill' draggable='true' data-group='MBUS'>+ <span class='pillLabel' contenteditable='true' label='Nonprofit Res Dev Strategies'>MBUS-659</span></div>
+<div class='pill' draggable='true' data-group='MBUS'>+ <span class='pillLabel' contenteditable='true' label='Team Building & Cultural Comp'>MBUS-662</span></div>
+<div class='pill' draggable='true' data-group='MBUS'>+ <span class='pillLabel' contenteditable='true' label='Comm Essentl Fin Info'>MBUS-663</span></div>
+<div class='pill' draggable='true' data-group='MBUS'>+ <span class='pillLabel' contenteditable='true' label='Strategic Plan & Implementatn'>MBUS-664</span></div>
+<div class='pill' draggable='true' data-group='MBUS'>+ <span class='pillLabel' contenteditable='true' label='Training & Development'>MBUS-670</span></div>
+<div class='pill' draggable='true' data-group='MBUS'>+ <span class='pillLabel' contenteditable='true' label='Fiscal Mgmt in Healthcare'>MBUS-671</span></div>
+<div class='pill' draggable='true' data-group='MBUS'>+ <span class='pillLabel' contenteditable='true' label='Healthcare Policy & Regulation'>MBUS-673</span></div>
+<div class='pill' draggable='true' data-group='MBUS'>+ <span class='pillLabel' contenteditable='true' label='Healthcare Operations'>MBUS-674</span></div>
+<div class='pill' draggable='true' data-group='MBUS'>+ <span class='pillLabel' contenteditable='true' label='Org Behavior in Sports'>MBUS-683</span></div>
+<div class='pill' draggable='true' data-group='MBUS'>+ <span class='pillLabel' contenteditable='true' label='Sports Communication'>MBUS-684</span></div>
+<div class='pill' draggable='true' data-group='MBUS'>+ <span class='pillLabel' contenteditable='true' label='Economics of Sports & Events'>MBUS-685</span></div>
+<div class='pill' draggable='true' data-group='MBUS'>+ <span class='pillLabel' contenteditable='true' label='Revenue Gener in Sports & Even'>MBUS-687</span></div>
+<div class='pill' draggable='true' data-group='MBUS'>+ <span class='pillLabel' contenteditable='true' label='Grad Bus Experiential Learning'>MBUS-699</span></div>
+<div class='pill' draggable='true' data-group='MBUS'>+ <span class='pillLabel' contenteditable='true' label='Applied Capstone in Workplace'>MBUS-700</span></div>
+<div class='pill' draggable='true' data-group='MBUS'>+ <span class='pillLabel' contenteditable='true' label='Organizational Leadership'>MSBC-099</span></div>
+<div class='pill' draggable='true' data-group='MBUS'>+ <span class='pillLabel' contenteditable='true' label='Compensation & Benefits'>MSBC-610</span></div>
+<div class='pill' draggable='true' data-group='MBUS'>+ <span class='pillLabel' contenteditable='true' label='Negotiation'>MSBC-612</span></div>
+<div class='pill' draggable='true' data-group='MBUS'>+ <span class='pillLabel' contenteditable='true' label='Data Visualization & Storytlng'>MSBC-614</span></div>
+<div class='pill' draggable='true' data-group='MBUS'>+ <span class='pillLabel' contenteditable='true' label='Integrated Mktg Communication'>MSBC-618</span></div>
+<div class='pill' draggable='true' data-group='MBUS'>+ <span class='pillLabel' contenteditable='true' label='Staffing Organizations'>MSBC-620</span></div>
+<div class='pill' draggable='true' data-group='MBUS'>+ <span class='pillLabel' contenteditable='true' label='Organizational Leadership'>MSBC-623</span></div>
+<div class='pill' draggable='true' data-group='MBUS'>+ <span class='pillLabel' contenteditable='true' label='Purpose-Driven Business in Global Econ'>MSBC-628</span></div>
+<div class='pill' draggable='true' data-group='MBUS'>+ <span class='pillLabel' contenteditable='true' label='Employment Law'>MSBC-630</span></div>
+<div class='pill' draggable='true' data-group='MBUS'>+ <span class='pillLabel' contenteditable='true' label='Intercultural Comm in the Workplace'>MSBC-633</span></div>
+<div class='pill' draggable='true' data-group='MBUS'>+ <span class='pillLabel' contenteditable='true' label='Interpersonal Comm in the Workplace'>MSBC-638</span></div>
+<div class='pill' draggable='true' data-group='MBUS'>+ <span class='pillLabel' contenteditable='true' label='Performance Eval & Conflict Resolution'>MSBC-644</span></div>
+<div class='pill' draggable='true' data-group='MBUS'>+ <span class='pillLabel' contenteditable='true' label='Project Planning & Implementation'>MSBC-646</span></div>
+<div class='pill' draggable='true' data-group='MBUS'>+ <span class='pillLabel' contenteditable='true' label='Resource Estimat/Risk Mgmt/Communication'>MSBC-647</span></div>
+<div class='pill' draggable='true' data-group='MBUS'>+ <span class='pillLabel' contenteditable='true' label='Digital Comm in the Workplace'>MSBC-648</span></div>
+<div class='pill' draggable='true' data-group='MBUS'>+ <span class='pillLabel' contenteditable='true' label='Organizational Development and Change'>MSBC-655</span></div>
+<div class='pill' draggable='true' data-group='MBUS'>+ <span class='pillLabel' contenteditable='true' label='Nonprofit Management'>MSBC-656</span></div>
+<div class='pill' draggable='true' data-group='MBUS'>+ <span class='pillLabel' contenteditable='true' label='Nonprofit Resource Development Strategie'>MSBC-659</span></div>
+<div class='pill' draggable='true' data-group='MBUS'>+ <span class='pillLabel' contenteditable='true' label='Team Building and Cultural Competency'>MSBC-662</span></div>
+<div class='pill' draggable='true' data-group='MBUS'>+ <span class='pillLabel' contenteditable='true' label='Communicating Essential Financial Info'>MSBC-663</span></div>
+<div class='pill' draggable='true' data-group='MBUS'>+ <span class='pillLabel' contenteditable='true' label='Strategic Planning & Implementation'>MSBC-664</span></div>
+<div class='pill' draggable='true' data-group='MBUS'>+ <span class='pillLabel' contenteditable='true' label='Training & Development'>MSBC-670</span></div>
+<div class='pill' draggable='true' data-group='MBUS'>+ <span class='pillLabel' contenteditable='true' label='Healthcare Policy and Regulation'>MSBC-673</span></div>
+<div class='pill' draggable='true' data-group='MBUS'>+ <span class='pillLabel' contenteditable='true' label='Healthcare and Human Resources'>MSBC-674</span></div>
+<div class='pill' draggable='true' data-group='MBUS'>+ <span class='pillLabel' contenteditable='true' label='Organizational Behav in Sports'>MSBC-683</span></div>
+<div class='pill' draggable='true' data-group='MBUS'>+ <span class='pillLabel' contenteditable='true' label='Sports Communication'>MSBC-684</span></div>
+<div class='pill' draggable='true' data-group='MBUS'>+ <span class='pillLabel' contenteditable='true' label='Economics of Sports & Events'>MSBC-685</span></div>
+<div class='pill' draggable='true' data-group='MBUS'>+ <span class='pillLabel' contenteditable='true' label='Revenue Gen in Sports & Events'>MSBC-687</span></div>
+<div class='pill' draggable='true' data-group='MBUS'>+ <span class='pillLabel' contenteditable='true' label='Applied Capstone in the Workplace'>MSBC-700</span></div>
+<div class='pill' draggable='true' data-group='REG'>+ <span class='pillLabel' contenteditable='true' label='University Studies Requirement'>US-201</span></div>
+<div class='pill' draggable='true' data-group='UART'>+ <span class='pillLabel' contenteditable='true' label='Design Thnkg & Prob Solvng'>ART-105</span></div>
+<div class='pill' draggable='true' data-group='UART'>+ <span class='pillLabel' contenteditable='true' label='Design I: Visual Communicatn'>ART-109</span></div>
+<div class='pill' draggable='true' data-group='UART'>+ <span class='pillLabel' contenteditable='true' label='Innovation Lab: Safe, Tools, S'>ART-120</span></div>
+<div class='pill' draggable='true' data-group='UART'>+ <span class='pillLabel' contenteditable='true' label='Innovation Lab: Exp of Materl'>ART-122</span></div>
+<div class='pill' draggable='true' data-group='UART'>+ <span class='pillLabel' contenteditable='true' label='Intro to Printmaking'>ART-125</span></div>
+<div class='pill' draggable='true' data-group='UART'>+ <span class='pillLabel' contenteditable='true' label='Drawing I'>ART-135</span></div>
+<div class='pill' draggable='true' data-group='UART'>+ <span class='pillLabel' contenteditable='true' label='Painting I'>ART-140</span></div>
+<div class='pill' draggable='true' data-group='UART'>+ <span class='pillLabel' contenteditable='true' label='Intro to Graphic Design'>ART-155</span></div>
+<div class='pill' draggable='true' data-group='UART'>+ <span class='pillLabel' contenteditable='true' label='Illustration I'>ART-162</span></div>
+<div class='pill' draggable='true' data-group='UART'>+ <span class='pillLabel' contenteditable='true' label='Typography I'>ART-165</span></div>
+<div class='pill' draggable='true' data-group='UART'>+ <span class='pillLabel' contenteditable='true' label='Digital Photography I'>ART-168</span></div>
+<div class='pill' draggable='true' data-group='UART'>+ <span class='pillLabel' contenteditable='true' label='Digital Video I'>ART-174</span></div>
+<div class='pill' draggable='true' data-group='UART'>+ <span class='pillLabel' contenteditable='true' label='Ceramics I'>ART-203</span></div>
+<div class='pill' draggable='true' data-group='UART'>+ <span class='pillLabel' contenteditable='true' label='Drawing'>ART-235</span></div>
+<div class='pill' draggable='true' data-group='UART'>+ <span class='pillLabel' contenteditable='true' label='Graphic Design'>ART-255</span></div>
+<div class='pill' draggable='true' data-group='UART'>+ <span class='pillLabel' contenteditable='true' label='Illustration II'>ART-262</span></div>
+<div class='pill' draggable='true' data-group='UART'>+ <span class='pillLabel' contenteditable='true' label='Typography II'>ART-265</span></div>
+<div class='pill' draggable='true' data-group='UART'>+ <span class='pillLabel' contenteditable='true' label='Digital Photography II'>ART-268</span></div>
+<div class='pill' draggable='true' data-group='UART'>+ <span class='pillLabel' contenteditable='true' label='Material & Process'>ART-271</span></div>
+<div class='pill' draggable='true' data-group='UART'>+ <span class='pillLabel' contenteditable='true' label='Painting Ii: Sensibility & Structure'>ART-275</span></div>
+<div class='pill' draggable='true' data-group='UART'>+ <span class='pillLabel' contenteditable='true' label='Figure Drawing'>ART-280</span></div>
+<div class='pill' draggable='true' data-group='UART'>+ <span class='pillLabel' contenteditable='true' label='The Object, Mass Prod & Multip'>ART-283</span></div>
+<div class='pill' draggable='true' data-group='UART'>+ <span class='pillLabel' contenteditable='true' label='Spatial Inv in Drawing & Paint'>ART-284</span></div>
+<div class='pill' draggable='true' data-group='UART'>+ <span class='pillLabel' contenteditable='true' label='Mindful Practice'>ART-285</span></div>
+<div class='pill' draggable='true' data-group='UART'>+ <span class='pillLabel' contenteditable='true' label='Collaboration & Community'>ART-300</span></div>
+<div class='pill' draggable='true' data-group='UART'>+ <span class='pillLabel' contenteditable='true' label='Art in Context'>ART-302</span></div>
+<div class='pill' draggable='true' data-group='UART'>+ <span class='pillLabel' contenteditable='true' label='Ceramics II'>ART-303</span></div>
+<div class='pill' draggable='true' data-group='UART'>+ <span class='pillLabel' contenteditable='true' label='Digital Painting'>ART-322</span></div>
+<div class='pill' draggable='true' data-group='UART'>+ <span class='pillLabel' contenteditable='true' label='The Expanded Picture Plane'>ART-324</span></div>
+<div class='pill' draggable='true' data-group='UART'>+ <span class='pillLabel' contenteditable='true' label='Narratv Drwng Incl Graph Novel'>ART-335</span></div>
+<div class='pill' draggable='true' data-group='UART'>+ <span class='pillLabel' contenteditable='true' label='Self-Publishing & Production'>ART-340</span></div>
+<div class='pill' draggable='true' data-group='UART'>+ <span class='pillLabel' contenteditable='true' label='Web Design'>ART-342</span></div>
+<div class='pill' draggable='true' data-group='UART'>+ <span class='pillLabel' contenteditable='true' label='Maps of Places, Info & Mind'>ART-348</span></div>
+<div class='pill' draggable='true' data-group='UART'>+ <span class='pillLabel' contenteditable='true' label='Drawing With Color'>ART-358</span></div>
+<div class='pill' draggable='true' data-group='UART'>+ <span class='pillLabel' contenteditable='true' label='Profess Identity & Internship'>ART-360</span></div>
+<div class='pill' draggable='true' data-group='UART'>+ <span class='pillLabel' contenteditable='true' label='Writing +'>ART-365</span></div>
+<div class='pill' draggable='true' data-group='UART'>+ <span class='pillLabel' contenteditable='true' label='Forging Identity'>ART-371</span></div>
+<div class='pill' draggable='true' data-group='UART'>+ <span class='pillLabel' contenteditable='true' label='The Figure'>ART-372</span></div>
+<div class='pill' draggable='true' data-group='UART'>+ <span class='pillLabel' contenteditable='true' label='Junior Capstone'>ART-375</span></div>
+<div class='pill' draggable='true' data-group='UART'>+ <span class='pillLabel' contenteditable='true' label='Figure Painting'>ART-382</span></div>
+<div class='pill' draggable='true' data-group='UART'>+ <span class='pillLabel' contenteditable='true' label='Individual Series Development'>ART-385</span></div>
+<div class='pill' draggable='true' data-group='UART'>+ <span class='pillLabel' contenteditable='true' label='Art, Ecology, & Environment'>ART-388</span></div>
+<div class='pill' draggable='true' data-group='UART'>+ <span class='pillLabel' contenteditable='true' label='Installation Art & Media'>ART-390</span></div>
+<div class='pill' draggable='true' data-group='UART'>+ <span class='pillLabel' contenteditable='true' label='Digital Image Thru Analog Mech'>ART-395</span></div>
+<div class='pill' draggable='true' data-group='UART'>+ <span class='pillLabel' contenteditable='true' label='Senior Capstone'>ART-415</span></div>
+<div class='pill' draggable='true' data-group='UART'>+ <span class='pillLabel' contenteditable='true' label='Innovation Lab: Application'>ART-420</span></div>
+<div class='pill' draggable='true' data-group='UART'>+ <span class='pillLabel' contenteditable='true' label='Special Topics: Studio Art'>ART-495</span></div>
+<div class='pill' draggable='true' data-group='UART'>+ <span class='pillLabel' contenteditable='true' label='Art Elective'>ART-999</span></div>
+<div class='pill' draggable='true' data-group='UART'>+ <span class='pillLabel' contenteditable='true' label='World Art Prehist - Middle Age'>ARTH-225</span></div>
+<div class='pill' draggable='true' data-group='UART'>+ <span class='pillLabel' contenteditable='true' label='Human Innovation Across Time'>ARTH-230</span></div>
+<div class='pill' draggable='true' data-group='UART'>+ <span class='pillLabel' contenteditable='true' label='Art From Renaissnc Thru Romant'>ARTH-240</span></div>
+<div class='pill' draggable='true' data-group='UART'>+ <span class='pillLabel' contenteditable='true' label='Intro to Western Art'>ARTH-245</span></div>
+<div class='pill' draggable='true' data-group='UART'>+ <span class='pillLabel' contenteditable='true' label='Modern Through Contemporary Art'>ARTH-252</span></div>
+<div class='pill' draggable='true' data-group='UART'>+ <span class='pillLabel' contenteditable='true' label='Special Topics in Art History'>ARTH-265</span></div>
+<div class='pill' draggable='true' data-group='UART'>+ <span class='pillLabel' contenteditable='true' label='From Graphic Novl to Design'>ARTH-305</span></div>
+<div class='pill' draggable='true' data-group='UART'>+ <span class='pillLabel' contenteditable='true' label='Theories of Art in Society'>ARTH-306</span></div>
+<div class='pill' draggable='true' data-group='UART'>+ <span class='pillLabel' contenteditable='true' label='Global Curr in Contemp Art'>ARTH-340</span></div>
+<div class='pill' draggable='true' data-group='UART'>+ <span class='pillLabel' contenteditable='true' label='Feminism & Queer Theory in Vis'>ARTH-420</span></div>
+<div class='pill' draggable='true' data-group='UART'>+ <span class='pillLabel' contenteditable='true' label='Spec Topics: Art History'>ARTH-495</span></div>
+<div class='pill' draggable='true' data-group='UART'>+ <span class='pillLabel' contenteditable='true' label='Art History Elective'>ARTH-999</span></div>
+<div class='pill' draggable='true' data-group='UART'>+ <span class='pillLabel' contenteditable='true' label='Professional Seminar'>KSA-350</span></div>
+<div class='pill' draggable='true' data-group='UBUS'>+ <span class='pillLabel' contenteditable='true' label='Principles of Accounting I'>ACC-261</span></div>
+<div class='pill' draggable='true' data-group='UBUS'>+ <span class='pillLabel' contenteditable='true' label='Principles of Accounting II'>ACC-262</span></div>
+<div class='pill' draggable='true' data-group='UBUS'>+ <span class='pillLabel' contenteditable='true' label='Intermediate Accounting I'>ACC-301</span></div>
+<div class='pill' draggable='true' data-group='UBUS'>+ <span class='pillLabel' contenteditable='true' label='Intermediate Accounting II'>ACC-302</span></div>
+<div class='pill' draggable='true' data-group='UBUS'>+ <span class='pillLabel' contenteditable='true' label='Intermediate Accounting III'>ACC-303</span></div>
+<div class='pill' draggable='true' data-group='UBUS'>+ <span class='pillLabel' contenteditable='true' label='Not-For-Profit Accounting'>ACC-313</span></div>
+<div class='pill' draggable='true' data-group='UBUS'>+ <span class='pillLabel' contenteditable='true' label='Managerial Cost Accounting'>ACC-314</span></div>
+<div class='pill' draggable='true' data-group='UBUS'>+ <span class='pillLabel' contenteditable='true' label='Tax I: Individual Taxation'>ACC-315</span></div>
+<div class='pill' draggable='true' data-group='UBUS'>+ <span class='pillLabel' contenteditable='true' label='Tax Ii: Corporate Tax'>ACC-415</span></div>
+<div class='pill' draggable='true' data-group='UBUS'>+ <span class='pillLabel' contenteditable='true' label='Advanced Accounting Problems'>ACC-420</span></div>
+<div class='pill' draggable='true' data-group='UBUS'>+ <span class='pillLabel' contenteditable='true' label='Auditing and Systems'>ACC-481</span></div>
+<div class='pill' draggable='true' data-group='UBUS'>+ <span class='pillLabel' contenteditable='true' label='AI for Everyone'>AIL-200</span></div>
+<div class='pill' draggable='true' data-group='UBUS'>+ <span class='pillLabel' contenteditable='true' label='Ai for Decision-Making'>AIL-250</span></div>
+<div class='pill' draggable='true' data-group='UBUS'>+ <span class='pillLabel' contenteditable='true' label='AI for Creativity & Design'>AIL-320</span></div>
+<div class='pill' draggable='true' data-group='UBUS'>+ <span class='pillLabel' contenteditable='true' label='AI Ethics'>AIL-350</span></div>
+<div class='pill' draggable='true' data-group='UBUS'>+ <span class='pillLabel' contenteditable='true' label='Financial Success 101'>BA-200</span></div>
+<div class='pill' draggable='true' data-group='UBUS'>+ <span class='pillLabel' contenteditable='true' label='People, Planet, & Profit'>BA-205</span></div>
+<div class='pill' draggable='true' data-group='UBUS'>+ <span class='pillLabel' contenteditable='true' label='Foundations in Personal Finance'>BA-210</span></div>
+<div class='pill' draggable='true' data-group='UBUS'>+ <span class='pillLabel' contenteditable='true' label='Computer Applications'>BA-220</span></div>
+<div class='pill' draggable='true' data-group='UBUS'>+ <span class='pillLabel' contenteditable='true' label='Principles of Management'>BA-250</span></div>
+<div class='pill' draggable='true' data-group='UBUS'>+ <span class='pillLabel' contenteditable='true' label='Artificial Intelligenc in Work'>BA-310</span></div>
+<div class='pill' draggable='true' data-group='UBUS'>+ <span class='pillLabel' contenteditable='true' label='Computerized Data Analysis'>BA-320</span></div>
+<div class='pill' draggable='true' data-group='UBUS'>+ <span class='pillLabel' contenteditable='true' label='Project Planning & Implementn'>BA-346</span></div>
+<div class='pill' draggable='true' data-group='UBUS'>+ <span class='pillLabel' contenteditable='true' label='Management of Human Resources'>BA-351</span></div>
+<div class='pill' draggable='true' data-group='UBUS'>+ <span class='pillLabel' contenteditable='true' label='Crowdfunding Fundamentals'>BA-365</span></div>
+<div class='pill' draggable='true' data-group='UBUS'>+ <span class='pillLabel' contenteditable='true' label='Financial Management'>BA-366</span></div>
+<div class='pill' draggable='true' data-group='UBUS'>+ <span class='pillLabel' contenteditable='true' label='Legal Environment of Business'>BA-385</span></div>
+<div class='pill' draggable='true' data-group='UBUS'>+ <span class='pillLabel' contenteditable='true' label='Business Ethics & Social Responsibility'>BA-395</span></div>
+<div class='pill' draggable='true' data-group='UBUS'>+ <span class='pillLabel' contenteditable='true' label='Global Dimensions of Business'>BA-461</span></div>
+<div class='pill' draggable='true' data-group='UBUS'>+ <span class='pillLabel' contenteditable='true' label='Integrative Strategic Managmnt'>BA-481</span></div>
+<div class='pill' draggable='true' data-group='UBUS'>+ <span class='pillLabel' contenteditable='true' label='Independent Study'>BA-490</span></div>
+<div class='pill' draggable='true' data-group='UBUS'>+ <span class='pillLabel' contenteditable='true' label='Experiential Learning'>BA-491</span></div>
+<div class='pill' draggable='true' data-group='UBUS'>+ <span class='pillLabel' contenteditable='true' label='Internet Hist, Security & Tech'>CS-110</span></div>
+<div class='pill' draggable='true' data-group='UBUS'>+ <span class='pillLabel' contenteditable='true' label='Programming for Everyone I'>CS-210</span></div>
+<div class='pill' draggable='true' data-group='UBUS'>+ <span class='pillLabel' contenteditable='true' label='Application Development I'>CS-300</span></div>
+<div class='pill' draggable='true' data-group='UBUS'>+ <span class='pillLabel' contenteditable='true' label='Programming for Everyone II'>CS-310</span></div>
+<div class='pill' draggable='true' data-group='UBUS'>+ <span class='pillLabel' contenteditable='true' label='Web Development'>CS-320</span></div>
+<div class='pill' draggable='true' data-group='UBUS'>+ <span class='pillLabel' contenteditable='true' label='Application Development II'>CS-350</span></div>
+<div class='pill' draggable='true' data-group='UBUS'>+ <span class='pillLabel' contenteditable='true' label='Intry to Cybersecurity'>CYBR-101</span></div>
+<div class='pill' draggable='true' data-group='UBUS'>+ <span class='pillLabel' contenteditable='true' label='Cybercrime & Governance'>CYBR-201</span></div>
+<div class='pill' draggable='true' data-group='UBUS'>+ <span class='pillLabel' contenteditable='true' label='Modern Cybersecurity'>CYBR-250</span></div>
+<div class='pill' draggable='true' data-group='UBUS'>+ <span class='pillLabel' contenteditable='true' label='Network & System Security'>CYBR-301</span></div>
+<div class='pill' draggable='true' data-group='UBUS'>+ <span class='pillLabel' contenteditable='true' label='Cyber Forensics'>CYBR-350</span></div>
+<div class='pill' draggable='true' data-group='UBUS'>+ <span class='pillLabel' contenteditable='true' label='Capstone--Ethical Hacking'>CYBR-481</span></div>
+<div class='pill' draggable='true' data-group='UBUS'>+ <span class='pillLabel' contenteditable='true' label='Behavioral Econ & Finance'>ECON-280</span></div>
+<div class='pill' draggable='true' data-group='UBUS'>+ <span class='pillLabel' contenteditable='true' label='Microeconomics'>ECON-281</span></div>
+<div class='pill' draggable='true' data-group='UBUS'>+ <span class='pillLabel' contenteditable='true' label='Macroeconomics'>ECON-282</span></div>
+<div class='pill' draggable='true' data-group='UBUS'>+ <span class='pillLabel' contenteditable='true' label='Foundations in Personal Finance'>FIN-210</span></div>
+<div class='pill' draggable='true' data-group='UBUS'>+ <span class='pillLabel' contenteditable='true' label='Financial Management'>FIN-366</span></div>
+<div class='pill' draggable='true' data-group='UBUS'>+ <span class='pillLabel' contenteditable='true' label='Risk Management & Estate Plann'>FIN-410</span></div>
+<div class='pill' draggable='true' data-group='UBUS'>+ <span class='pillLabel' contenteditable='true' label='Investments & Retirement Plann'>FIN-466</span></div>
+<div class='pill' draggable='true' data-group='UBUS'>+ <span class='pillLabel' contenteditable='true' label='Financial Plan Development'>FIN-481</span></div>
+<div class='pill' draggable='true' data-group='UBUS'>+ <span class='pillLabel' contenteditable='true' label='Compensation and Benefits'>HRM-410</span></div>
+<div class='pill' draggable='true' data-group='UBUS'>+ <span class='pillLabel' contenteditable='true' label='Staffing Organizations'>HRM-420</span></div>
+<div class='pill' draggable='true' data-group='UBUS'>+ <span class='pillLabel' contenteditable='true' label='Employment Law'>HRM-430</span></div>
+<div class='pill' draggable='true' data-group='UBUS'>+ <span class='pillLabel' contenteditable='true' label='Training and Development'>HRM-470</span></div>
+<div class='pill' draggable='true' data-group='UBUS'>+ <span class='pillLabel' contenteditable='true' label='Intro to Information Technology Systems'>ITM-201</span></div>
+<div class='pill' draggable='true' data-group='UBUS'>+ <span class='pillLabel' contenteditable='true' label='Google Cloud Computing Foundat'>ITM-360</span></div>
+<div class='pill' draggable='true' data-group='UBUS'>+ <span class='pillLabel' contenteditable='true' label='Information Technology Capstone'>ITM-481</span></div>
+<div class='pill' draggable='true' data-group='UBUS'>+ <span class='pillLabel' contenteditable='true' label='Principles of Marketing'>MKT-240</span></div>
+<div class='pill' draggable='true' data-group='UBUS'>+ <span class='pillLabel' contenteditable='true' label='Social Media Marketing'>MKT-300</span></div>
+<div class='pill' draggable='true' data-group='UBUS'>+ <span class='pillLabel' contenteditable='true' label='Public Relations'>MKT-328</span></div>
+<div class='pill' draggable='true' data-group='UBUS'>+ <span class='pillLabel' contenteditable='true' label='Marketing Research & Analytics'>MKT-342</span></div>
+<div class='pill' draggable='true' data-group='UBUS'>+ <span class='pillLabel' contenteditable='true' label='Digital Marketing I'>MKT-375</span></div>
+<div class='pill' draggable='true' data-group='UBUS'>+ <span class='pillLabel' contenteditable='true' label='Digital Marketing II'>MKT-455</span></div>
+<div class='pill' draggable='true' data-group='UBUS'>+ <span class='pillLabel' contenteditable='true' label='Special Topics in Marketing'>MKT-470</span></div>
+<div class='pill' draggable='true' data-group='UBUS'>+ <span class='pillLabel' contenteditable='true' label='Strategic Marketing'>MKT-475</span></div>
+<div class='pill' draggable='true' data-group='UBUS'>+ <span class='pillLabel' contenteditable='true' label='Intro to Esports'>SPM-200</span></div>
+<div class='pill' draggable='true' data-group='UBUS'>+ <span class='pillLabel' contenteditable='true' label='Sports, Ethics, & Society'>SPM-250</span></div>
+<div class='pill' draggable='true' data-group='UBUS'>+ <span class='pillLabel' contenteditable='true' label='Sports Event Management'>SPM-300</span></div>
+<div class='pill' draggable='true' data-group='UBUS'>+ <span class='pillLabel' contenteditable='true' label='Sports Facility Plan & Mgmnt'>SPM-400</span></div>
+<div class='pill' draggable='true' data-group='UBUS'>+ <span class='pillLabel' contenteditable='true' label='Sports and the Law'>SPM-450</span></div>
+<div class='pill' draggable='true' data-group='UBUS'>+ <span class='pillLabel' contenteditable='true' label='Internship'>SPM-491</span></div>
+<div class='pill' draggable='true' data-group='UCJU'>+ <span class='pillLabel' contenteditable='true' label='Intro to Criminal Justice'>CJ-100</span></div>
+<div class='pill' draggable='true' data-group='UCJU'>+ <span class='pillLabel' contenteditable='true' label='Intro to Restorative Justice'>CJ-101</span></div>
+<div class='pill' draggable='true' data-group='UCJU'>+ <span class='pillLabel' contenteditable='true' label='Intro to Crim Justice Reform'>CJ-102</span></div>
+<div class='pill' draggable='true' data-group='UCJU'>+ <span class='pillLabel' contenteditable='true' label='Intro to Criminology'>CJ-103</span></div>
+<div class='pill' draggable='true' data-group='UCJU'>+ <span class='pillLabel' contenteditable='true' label='Intro to Juvenile Justice'>CJ-203</span></div>
+<div class='pill' draggable='true' data-group='UCJU'>+ <span class='pillLabel' contenteditable='true' label='Criminal Procedures'>CJ-216</span></div>
+<div class='pill' draggable='true' data-group='UCJU'>+ <span class='pillLabel' contenteditable='true' label='Race, Crimes, & Restor Justice'>CJ-220</span></div>
+<div class='pill' draggable='true' data-group='UCJU'>+ <span class='pillLabel' contenteditable='true' label='Juv Justice & Restorative Just'>CJ-225</span></div>
+<div class='pill' draggable='true' data-group='UCJU'>+ <span class='pillLabel' contenteditable='true' label='Police Problems & Practices'>CJ-230</span></div>
+<div class='pill' draggable='true' data-group='UCJU'>+ <span class='pillLabel' contenteditable='true' label='Punishment, Prisons, & Justice'>CJ-235</span></div>
+<div class='pill' draggable='true' data-group='UCJU'>+ <span class='pillLabel' contenteditable='true' label='Special Topics in CJ Studies'>CJ-290</span></div>
+<div class='pill' draggable='true' data-group='UCJU'>+ <span class='pillLabel' contenteditable='true' label='Research Methods'>CJ-315</span></div>
+<div class='pill' draggable='true' data-group='UCJU'>+ <span class='pillLabel' contenteditable='true' label='Contemporary Issues in CJ'>CJ-321</span></div>
+<div class='pill' draggable='true' data-group='UCJU'>+ <span class='pillLabel' contenteditable='true' label='Rehabilitation of the Offender'>CJ-330</span></div>
+<div class='pill' draggable='true' data-group='UCJU'>+ <span class='pillLabel' contenteditable='true' label='Victimology & Restor Justice'>CJ-340</span></div>
+<div class='pill' draggable='true' data-group='UCJU'>+ <span class='pillLabel' contenteditable='true' label='Socioec Problms, Crime & Solut'>CJ-410</span></div>
+<div class='pill' draggable='true' data-group='UCJU'>+ <span class='pillLabel' contenteditable='true' label='Criminal Justice Internship'>CJ-440</span></div>
+<div class='pill' draggable='true' data-group='UCJU'>+ <span class='pillLabel' contenteditable='true' label='Criminal Justice Capstone'>CJ-480</span></div>
+<div class='pill' draggable='true' data-group='UCJU'>+ <span class='pillLabel' contenteditable='true' label='Special Topics in CJ Studies'>CJ-490</span></div>
+<div class='pill' draggable='true' data-group='UCJU'>+ <span class='pillLabel' contenteditable='true' label='Police Reform'>CJR-310</span></div>
+<div class='pill' draggable='true' data-group='UCJU'>+ <span class='pillLabel' contenteditable='true' label='Criminal Court Reform'>CJR-315</span></div>
+<div class='pill' draggable='true' data-group='UCJU'>+ <span class='pillLabel' contenteditable='true' label='Prison Reform'>CJR-320</span></div>
+<div class='pill' draggable='true' data-group='UCJU'>+ <span class='pillLabel' contenteditable='true' label='Juvenile Justice Reform'>CJR-325</span></div>
+<div class='pill' draggable='true' data-group='UCJU'>+ <span class='pillLabel' contenteditable='true' label='Drug Reform'>CJR-330</span></div>
+<div class='pill' draggable='true' data-group='UCJU'>+ <span class='pillLabel' contenteditable='true' label='Re-Entry Reform'>CJR-335</span></div>
+<div class='pill' draggable='true' data-group='UCJU'>+ <span class='pillLabel' contenteditable='true' label='Black Males in CJ System'>CJR-340</span></div>
+<div class='pill' draggable='true' data-group='UCJU'>+ <span class='pillLabel' contenteditable='true' label='Mental Health & Reform'>CJR-345</span></div>
+<div class='pill' draggable='true' data-group='UCJU'>+ <span class='pillLabel' contenteditable='true' label='White Collar Crime&publ Corrup'>CJR-350</span></div>
+<div class='pill' draggable='true' data-group='UCJU'>+ <span class='pillLabel' contenteditable='true' label='Critical Issues in CJ Reform'>CJR-355</span></div>
+<div class='pill' draggable='true' data-group='UCJU'>+ <span class='pillLabel' contenteditable='true' label='Crim Just Policy Writ Workshop'>CJR-425</span></div>
+<div class='pill' draggable='true' data-group='UCJU'>+ <span class='pillLabel' contenteditable='true' label='Intro to Restorative Justice'>RJ-101</span></div>
+<div class='pill' draggable='true' data-group='UCJU'>+ <span class='pillLabel' contenteditable='true' label='Community Bldg & Restoraive Justice'>RJ-302</span></div>
+<div class='pill' draggable='true' data-group='UCJU'>+ <span class='pillLabel' contenteditable='true' label='Restorative Mediation'>RJ-303</span></div>
+<div class='pill' draggable='true' data-group='UCJU'>+ <span class='pillLabel' contenteditable='true' label='RJ Facilitation & Skill Build'>RJ-309</span></div>
+<div class='pill' draggable='true' data-group='UCOM'>+ <span class='pillLabel' contenteditable='true' label='Communication Theory'>COM-200</span></div>
+<div class='pill' draggable='true' data-group='UCOM'>+ <span class='pillLabel' contenteditable='true' label='Effective Speaking'>COM-201</span></div>
+<div class='pill' draggable='true' data-group='UCOM'>+ <span class='pillLabel' contenteditable='true' label='Group Communication'>COM-203</span></div>
+<div class='pill' draggable='true' data-group='UCOM'>+ <span class='pillLabel' contenteditable='true' label='Interpersonal Communication'>COM-204</span></div>
+<div class='pill' draggable='true' data-group='UCOM'>+ <span class='pillLabel' contenteditable='true' label='Discussion and Debate'>COM-205</span></div>
+<div class='pill' draggable='true' data-group='UCOM'>+ <span class='pillLabel' contenteditable='true' label='Media Literacy'>COM-213</span></div>
+<div class='pill' draggable='true' data-group='UCOM'>+ <span class='pillLabel' contenteditable='true' label='Digital Media'>COM-214</span></div>
+<div class='pill' draggable='true' data-group='UCOM'>+ <span class='pillLabel' contenteditable='true' label='Business & Professional Communication'>COM-233</span></div>
+<div class='pill' draggable='true' data-group='UCOM'>+ <span class='pillLabel' contenteditable='true' label='Special Topics in Communicatn'>COM-240</span></div>
+<div class='pill' draggable='true' data-group='UCOM'>+ <span class='pillLabel' contenteditable='true' label='Communication & Culture'>COM-245</span></div>
+<div class='pill' draggable='true' data-group='UCOM'>+ <span class='pillLabel' contenteditable='true' label='Critical Media Studies'>COM-255</span></div>
+<div class='pill' draggable='true' data-group='UCOM'>+ <span class='pillLabel' contenteditable='true' label='Applied Communication Research'>COM-300</span></div>
+<div class='pill' draggable='true' data-group='UCOM'>+ <span class='pillLabel' contenteditable='true' label='Health Communication'>COM-302</span></div>
+<div class='pill' draggable='true' data-group='UCOM'>+ <span class='pillLabel' contenteditable='true' label='Sports Media Communication'>COM-303</span></div>
+<div class='pill' draggable='true' data-group='UCOM'>+ <span class='pillLabel' contenteditable='true' label='Media Theory'>COM-308</span></div>
+<div class='pill' draggable='true' data-group='UCOM'>+ <span class='pillLabel' contenteditable='true' label='Argumentation'>COM-315</span></div>
+<div class='pill' draggable='true' data-group='UCOM'>+ <span class='pillLabel' contenteditable='true' label='Intercultural Communication'>COM-322</span></div>
+<div class='pill' draggable='true' data-group='UCOM'>+ <span class='pillLabel' contenteditable='true' label='Gender and Communication'>COM-323</span></div>
+<div class='pill' draggable='true' data-group='UCOM'>+ <span class='pillLabel' contenteditable='true' label='Public Relations'>COM-328</span></div>
+<div class='pill' draggable='true' data-group='UCOM'>+ <span class='pillLabel' contenteditable='true' label='Intro to Documentary'>COM-330</span></div>
+<div class='pill' draggable='true' data-group='UCOM'>+ <span class='pillLabel' contenteditable='true' label='Film & Social Change'>COM-331</span></div>
+<div class='pill' draggable='true' data-group='UCOM'>+ <span class='pillLabel' contenteditable='true' label='Organizational Communication'>COM-376</span></div>
+<div class='pill' draggable='true' data-group='UCOM'>+ <span class='pillLabel' contenteditable='true' label='Persuasion'>COM-381</span></div>
+<div class='pill' draggable='true' data-group='UCOM'>+ <span class='pillLabel' contenteditable='true' label='Political Communication'>COM-383</span></div>
+<div class='pill' draggable='true' data-group='UCOM'>+ <span class='pillLabel' contenteditable='true' label='Crisis Communication'>COM-404</span></div>
+<div class='pill' draggable='true' data-group='UCOM'>+ <span class='pillLabel' contenteditable='true' label='Conflict & Mediation Communctn'>COM-425</span></div>
+<div class='pill' draggable='true' data-group='UCOM'>+ <span class='pillLabel' contenteditable='true' label='The Professional Internship'>COM-443</span></div>
+<div class='pill' draggable='true' data-group='UCOM'>+ <span class='pillLabel' contenteditable='true' label='Training & Development'>COM-470</span></div>
+<div class='pill' draggable='true' data-group='UCOM'>+ <span class='pillLabel' contenteditable='true' label='Leadership & Communication'>COM-472</span></div>
+<div class='pill' draggable='true' data-group='UCOM'>+ <span class='pillLabel' contenteditable='true' label='Communication Senior Capstone Experience'>COM-481</span></div>
+<div class='pill' draggable='true' data-group='UCOM'>+ <span class='pillLabel' contenteditable='true' label='Independent Research in Communication'>COM-490</span></div>
+<div class='pill' draggable='true' data-group='UCOM'>+ <span class='pillLabel' contenteditable='true' label='Beginning Spanish I'>SPAN-101</span></div>
+<div class='pill' draggable='true' data-group='UCOM'>+ <span class='pillLabel' contenteditable='true' label='Beginning Spanish II'>SPAN-102</span></div>
+<div class='pill' draggable='true' data-group='UCOM'>+ <span class='pillLabel' contenteditable='true' label='Spanish for Healthcare Workers'>SPAN-103</span></div>
+<div class='pill' draggable='true' data-group='UCOM'>+ <span class='pillLabel' contenteditable='true' label='Theatre Appreciation'>TA-110</span></div>
+<div class='pill' draggable='true' data-group='UCOM'>+ <span class='pillLabel' contenteditable='true' label='Theatre Arts Workshop'>TA-115</span></div>
+<div class='pill' draggable='true' data-group='UCWR'>+ <span class='pillLabel' contenteditable='true' label='Intro to Creative Writing'>CW-221</span></div>
+<div class='pill' draggable='true' data-group='UCWR'>+ <span class='pillLabel' contenteditable='true' label='Poetry Workshop'>CW-322</span></div>
+<div class='pill' draggable='true' data-group='UCWR'>+ <span class='pillLabel' contenteditable='true' label='Creative Nonfiction Workshop'>CW-323</span></div>
+<div class='pill' draggable='true' data-group='UCWR'>+ <span class='pillLabel' contenteditable='true' label='Fiction Workshop'>CW-324</span></div>
+<div class='pill' draggable='true' data-group='UCWR'>+ <span class='pillLabel' contenteditable='true' label='Dramatic Writing Workshop'>CW-325</span></div>
+<div class='pill' draggable='true' data-group='UCWR'>+ <span class='pillLabel' contenteditable='true' label='Online + Print Publictn Publis'>CW-326</span></div>
+<div class='pill' draggable='true' data-group='UCWR'>+ <span class='pillLabel' contenteditable='true' label='Internship'>CW-349</span></div>
+<div class='pill' draggable='true' data-group='UCWR'>+ <span class='pillLabel' contenteditable='true' label='Spec Topics in Creative Writing'>CW-385</span></div>
+<div class='pill' draggable='true' data-group='UCWR'>+ <span class='pillLabel' contenteditable='true' label='Creative Writing: MFA Resdncy'>CW-399</span></div>
+<div class='pill' draggable='true' data-group='UCWR'>+ <span class='pillLabel' contenteditable='true' label='Leadership in the Arts'>CW-400</span></div>
+<div class='pill' draggable='true' data-group='UCWR'>+ <span class='pillLabel' contenteditable='true' label='Senior Seminar'>CW-450</span></div>
+<div class='pill' draggable='true' data-group='UEDU'>+ <span class='pillLabel' contenteditable='true' label='Introduction to Special Education'>ECS-350</span></div>
+<div class='pill' draggable='true' data-group='UEDU'>+ <span class='pillLabel' contenteditable='true' label='Methods & Strategies in Behavior Mgmt'>ECS-370</span></div>
+<div class='pill' draggable='true' data-group='UEDU'>+ <span class='pillLabel' contenteditable='true' label='Instruction & Assessment Methods'>ECS-380</span></div>
+<div class='pill' draggable='true' data-group='UEDU'>+ <span class='pillLabel' contenteditable='true' label='Assistive/Adaptive Technology'>ECS-385</span></div>
+<div class='pill' draggable='true' data-group='UEDU'>+ <span class='pillLabel' contenteditable='true' label='Prescriptive Teaching'>ECS-395</span></div>
+<div class='pill' draggable='true' data-group='UEDU'>+ <span class='pillLabel' contenteditable='true' label='Teaching Math to Children With Lbd'>ECS-442</span></div>
+<div class='pill' draggable='true' data-group='UEDU'>+ <span class='pillLabel' contenteditable='true' label='Meth & Strat Teaching Acad Curriculum'>ECS-475</span></div>
+<div class='pill' draggable='true' data-group='UEDU'>+ <span class='pillLabel' contenteditable='true' label='Language Arts Theories and Practices'>EDR-311</span></div>
+<div class='pill' draggable='true' data-group='UEDU'>+ <span class='pillLabel' contenteditable='true' label='Reading Theories and Practices'>EDR-315</span></div>
+<div class='pill' draggable='true' data-group='UEDU'>+ <span class='pillLabel' contenteditable='true' label='Literature for Children'>EDR-430</span></div>
+<div class='pill' draggable='true' data-group='UEDU'>+ <span class='pillLabel' contenteditable='true' label='Literature for Young Adults'>EDR-431</span></div>
+<div class='pill' draggable='true' data-group='UEDU'>+ <span class='pillLabel' contenteditable='true' label='Developmental Read Middle & High Schools'>EDR-456</span></div>
+<div class='pill' draggable='true' data-group='UEDU'>+ <span class='pillLabel' contenteditable='true' label='Successful Init Teacher Certification'>EDU-201</span></div>
+<div class='pill' draggable='true' data-group='UEDU'>+ <span class='pillLabel' contenteditable='true' label='Foundations of Education'>EDU-213</span></div>
+<div class='pill' draggable='true' data-group='UEDU'>+ <span class='pillLabel' contenteditable='true' label='Classroom Management'>EDU-314</span></div>
+<div class='pill' draggable='true' data-group='UEDU'>+ <span class='pillLabel' contenteditable='true' label='Assessment for Teaching & Learning'>EDU-320</span></div>
+<div class='pill' draggable='true' data-group='UEDU'>+ <span class='pillLabel' contenteditable='true' label='Mathematic Methods in the Elementary School'>EDU-332</span></div>
+<div class='pill' draggable='true' data-group='UEDU'>+ <span class='pillLabel' contenteditable='true' label='Learning & Development Through Lifespan'>EDU-377</span></div>
+<div class='pill' draggable='true' data-group='UEDU'>+ <span class='pillLabel' contenteditable='true' label='Multimedia Apps for Teaching & Learning'>EDU-379</span></div>
+<div class='pill' draggable='true' data-group='UEDU'>+ <span class='pillLabel' contenteditable='true' label='Inclusive Classroom'>EDU-385</span></div>
+<div class='pill' draggable='true' data-group='UEDU'>+ <span class='pillLabel' contenteditable='true' label='Professional Preparation'>EDU-401</span></div>
+<div class='pill' draggable='true' data-group='UEDU'>+ <span class='pillLabel' contenteditable='true' label='Integrated Arts & Creative Movement'>EDU-410</span></div>
+<div class='pill' draggable='true' data-group='UEDU'>+ <span class='pillLabel' contenteditable='true' label='Supervised Student Teaching'>EDU-441</span></div>
+<div class='pill' draggable='true' data-group='UEDU'>+ <span class='pillLabel' contenteditable='true' label='Education Capstone Seminar'>EDU-447</span></div>
+<div class='pill' draggable='true' data-group='UEDU'>+ <span class='pillLabel' contenteditable='true' label='Curriculum & Methods in Mid/High School'>EDU-460</span></div>
+<div class='pill' draggable='true' data-group='UEDU'>+ <span class='pillLabel' contenteditable='true' label='Curriculum Development K-12'>EDU-490</span></div>
+<div class='pill' draggable='true' data-group='UEDU'>+ <span class='pillLabel' contenteditable='true' label='Science in the Elementary School'>ESC-325</span></div>
+<div class='pill' draggable='true' data-group='UEDU'>+ <span class='pillLabel' contenteditable='true' label='Social Sciences in the Elementary School'>ESS-334</span></div>
+<div class='pill' draggable='true' data-group='UHSC'>+ <span class='pillLabel' contenteditable='true' label='Survey of Health Professions'>HS-300</span></div>
+<div class='pill' draggable='true' data-group='UHSC'>+ <span class='pillLabel' contenteditable='true' label='Medical Terminology'>HS-301</span></div>
+<div class='pill' draggable='true' data-group='UHSC'>+ <span class='pillLabel' contenteditable='true' label='Technology & Health'>HS-302</span></div>
+<div class='pill' draggable='true' data-group='UHSC'>+ <span class='pillLabel' contenteditable='true' label='Personal Health & Wellness'>HS-320</span></div>
+<div class='pill' draggable='true' data-group='UHSC'>+ <span class='pillLabel' contenteditable='true' label='Cultivating Humility in Health'>HS-321</span></div>
+<div class='pill' draggable='true' data-group='UHSC'>+ <span class='pillLabel' contenteditable='true' label='Psychosocial Health & Wellness'>HS-325</span></div>
+<div class='pill' draggable='true' data-group='UHSC'>+ <span class='pillLabel' contenteditable='true' label='Social Determinants of Health'>HS-330</span></div>
+<div class='pill' draggable='true' data-group='UHSC'>+ <span class='pillLabel' contenteditable='true' label='Consumer of Evide-Info Research'>HS-350</span></div>
+<div class='pill' draggable='true' data-group='UHSC'>+ <span class='pillLabel' contenteditable='true' label='Integrative Health'>HS-405</span></div>
+<div class='pill' draggable='true' data-group='UHSC'>+ <span class='pillLabel' contenteditable='true' label='Personal Leadership Development'>HS-410</span></div>
+<div class='pill' draggable='true' data-group='UHSC'>+ <span class='pillLabel' contenteditable='true' label='Interprofessional Collaboratio'>HS-420</span></div>
+<div class='pill' draggable='true' data-group='UHSC'>+ <span class='pillLabel' contenteditable='true' label='Telehealth in Health Professio'>HS-435</span></div>
+<div class='pill' draggable='true' data-group='UHSC'>+ <span class='pillLabel' contenteditable='true' label='Health Promotion & Human Behav'>HS-440</span></div>
+<div class='pill' draggable='true' data-group='UHSC'>+ <span class='pillLabel' contenteditable='true' label='U.S. Health Care System'>HS-445</span></div>
+<div class='pill' draggable='true' data-group='UHSC'>+ <span class='pillLabel' contenteditable='true' label='Health Coaching'>HS-450</span></div>
+<div class='pill' draggable='true' data-group='UHSC'>+ <span class='pillLabel' contenteditable='true' label='Health Innovation'>HS-455</span></div>
+<div class='pill' draggable='true' data-group='UHSC'>+ <span class='pillLabel' contenteditable='true' label='Health Science Capstone'>HS-490</span></div>
+<div class='pill' draggable='true' data-group='UHSC'>+ <span class='pillLabel' contenteditable='true' label='Active Professional License Or Cert'>HS-900</span></div>
+<div class='pill' draggable='true' data-group='ULST'>+ <span class='pillLabel' contenteditable='true' label='Intro to African American Stud'>AAS-201</span></div>
+<div class='pill' draggable='true' data-group='ULST'>+ <span class='pillLabel' contenteditable='true' label='The Evolution of Black Studies'>AAS-202</span></div>
+<div class='pill' draggable='true' data-group='ULST'>+ <span class='pillLabel' contenteditable='true' label='Black Legacy Series'>AAS-205</span></div>
+<div class='pill' draggable='true' data-group='ULST'>+ <span class='pillLabel' contenteditable='true' label='African Civilizations'>AAS-300</span></div>
+<div class='pill' draggable='true' data-group='ULST'>+ <span class='pillLabel' contenteditable='true' label='Policing the Black Experience'>AAS-301</span></div>
+<div class='pill' draggable='true' data-group='ULST'>+ <span class='pillLabel' contenteditable='true' label='School to Prison Pipeline'>AAS-303</span></div>
+<div class='pill' draggable='true' data-group='ULST'>+ <span class='pillLabel' contenteditable='true' label='War on Drugs & School to Prisn'>AAS-304</span></div>
+<div class='pill' draggable='true' data-group='ULST'>+ <span class='pillLabel' contenteditable='true' label='Rites of Passage'>AAS-305</span></div>
+<div class='pill' draggable='true' data-group='ULST'>+ <span class='pillLabel' contenteditable='true' label='Modern Africa'>AAS-306</span></div>
+<div class='pill' draggable='true' data-group='ULST'>+ <span class='pillLabel' contenteditable='true' label='Community Leaders for Human Rights & Soc'>AAS-307</span></div>
+<div class='pill' draggable='true' data-group='ULST'>+ <span class='pillLabel' contenteditable='true' label='Sex, Sexuality, & Motherhood'>AAS-332</span></div>
+<div class='pill' draggable='true' data-group='ULST'>+ <span class='pillLabel' contenteditable='true' label='African American Education'>AAS-345</span></div>
+<div class='pill' draggable='true' data-group='ULST'>+ <span class='pillLabel' contenteditable='true' label='Black Student Experience'>AAS-346</span></div>
+<div class='pill' draggable='true' data-group='ULST'>+ <span class='pillLabel' contenteditable='true' label='Praxis in African Amer Studies'>AAS-349</span></div>
+<div class='pill' draggable='true' data-group='ULST'>+ <span class='pillLabel' contenteditable='true' label='Honors Seminar in African American Studi'>AAS-385</span></div>
+<div class='pill' draggable='true' data-group='ULST'>+ <span class='pillLabel' contenteditable='true' label='AAS Research Meth & Capstone'>AAS-400</span></div>
+<div class='pill' draggable='true' data-group='ULST'>+ <span class='pillLabel' contenteditable='true' label='Internship'>AAS-401</span></div>
+<div class='pill' draggable='true' data-group='ULST'>+ <span class='pillLabel' contenteditable='true' label='Special Topics in Anthropology'>ANTH-200</span></div>
+<div class='pill' draggable='true' data-group='ULST'>+ <span class='pillLabel' contenteditable='true' label='Cultural Anthropology'>ANTH-211</span></div>
+<div class='pill' draggable='true' data-group='ULST'>+ <span class='pillLabel' contenteditable='true' label='Topics in Anthropology'>ANTH-300</span></div>
+<div class='pill' draggable='true' data-group='ULST'>+ <span class='pillLabel' contenteditable='true' label='The War on Drugs'>ANTH-305</span></div>
+<div class='pill' draggable='true' data-group='ULST'>+ <span class='pillLabel' contenteditable='true' label='Race & Racism in American Cult'>ANTH-315</span></div>
+<div class='pill' draggable='true' data-group='ULST'>+ <span class='pillLabel' contenteditable='true' label='Politics, Food, & Hunger'>ANTH-325</span></div>
+<div class='pill' draggable='true' data-group='ULST'>+ <span class='pillLabel' contenteditable='true' label='Independent Study'>ANTH-490</span></div>
+<div class='pill' draggable='true' data-group='ULST'>+ <span class='pillLabel' contenteditable='true' label='Genre Workshop'>CW-328</span></div>
+<div class='pill' draggable='true' data-group='ULST'>+ <span class='pillLabel' contenteditable='true' label='Crowdsourcing Fundamentals'>CW-329</span></div>
+<div class='pill' draggable='true' data-group='ULST'>+ <span class='pillLabel' contenteditable='true' label='College Writing Workshop I'>ENG-109</span></div>
+<div class='pill' draggable='true' data-group='ULST'>+ <span class='pillLabel' contenteditable='true' label='College Writing Workshop II'>ENG-110</span></div>
+<div class='pill' draggable='true' data-group='ULST'>+ <span class='pillLabel' contenteditable='true' label='Survey of English Literature I'>ENG-201</span></div>
+<div class='pill' draggable='true' data-group='ULST'>+ <span class='pillLabel' contenteditable='true' label='Survey of English Lit II'>ENG-202</span></div>
+<div class='pill' draggable='true' data-group='ULST'>+ <span class='pillLabel' contenteditable='true' label='Introduction to Poetry'>ENG-205</span></div>
+<div class='pill' draggable='true' data-group='ULST'>+ <span class='pillLabel' contenteditable='true' label='Introduction to Fiction'>ENG-206</span></div>
+<div class='pill' draggable='true' data-group='ULST'>+ <span class='pillLabel' contenteditable='true' label='Introduction to Drama'>ENG-207</span></div>
+<div class='pill' draggable='true' data-group='ULST'>+ <span class='pillLabel' contenteditable='true' label='Introduction to Film'>ENG-208</span></div>
+<div class='pill' draggable='true' data-group='ULST'>+ <span class='pillLabel' contenteditable='true' label='Introduction to Textuality'>ENG-209</span></div>
+<div class='pill' draggable='true' data-group='ULST'>+ <span class='pillLabel' contenteditable='true' label='Language, Culture, & Society'>ENG-210</span></div>
+<div class='pill' draggable='true' data-group='ULST'>+ <span class='pillLabel' contenteditable='true' label='Survery of American Lit I'>ENG-211</span></div>
+<div class='pill' draggable='true' data-group='ULST'>+ <span class='pillLabel' contenteditable='true' label='Survey of American Lit II'>ENG-212</span></div>
+<div class='pill' draggable='true' data-group='ULST'>+ <span class='pillLabel' contenteditable='true' label='Intro to Professional Writing'>ENG-214</span></div>
+<div class='pill' draggable='true' data-group='ULST'>+ <span class='pillLabel' contenteditable='true' label='Special Topics in Linguistics'>ENG-220</span></div>
+<div class='pill' draggable='true' data-group='ULST'>+ <span class='pillLabel' contenteditable='true' label='Emerging Genres'>ENG-225</span></div>
+<div class='pill' draggable='true' data-group='ULST'>+ <span class='pillLabel' contenteditable='true' label='Practicum for Writing Consultants'>ENG-250</span></div>
+<div class='pill' draggable='true' data-group='ULST'>+ <span class='pillLabel' contenteditable='true' label='Practicum Literary Mag Operatn'>ENG-260</span></div>
+<div class='pill' draggable='true' data-group='ULST'>+ <span class='pillLabel' contenteditable='true' label='English Elective'>ENG-299</span></div>
+<div class='pill' draggable='true' data-group='ULST'>+ <span class='pillLabel' contenteditable='true' label='Writing for the Media'>ENG-313</span></div>
+<div class='pill' draggable='true' data-group='ULST'>+ <span class='pillLabel' contenteditable='true' label='Proposals & Grant Writing'>ENG-326</span></div>
+<div class='pill' draggable='true' data-group='ULST'>+ <span class='pillLabel' contenteditable='true' label='Intro to Linguistics'>ENG-355</span></div>
+<div class='pill' draggable='true' data-group='ULST'>+ <span class='pillLabel' contenteditable='true' label='African American Literature'>ENG-364</span></div>
+<div class='pill' draggable='true' data-group='ULST'>+ <span class='pillLabel' contenteditable='true' label='Modern World Literature in English'>ENG-365</span></div>
+<div class='pill' draggable='true' data-group='ULST'>+ <span class='pillLabel' contenteditable='true' label='Themes in Literature'>ENG-383</span></div>
+<div class='pill' draggable='true' data-group='ULST'>+ <span class='pillLabel' contenteditable='true' label='Romanticism'>ENG-388</span></div>
+<div class='pill' draggable='true' data-group='ULST'>+ <span class='pillLabel' contenteditable='true' label='Independent Study'>ENG-490</span></div>
+<div class='pill' draggable='true' data-group='ULST'>+ <span class='pillLabel' contenteditable='true' label='English Elective'>ENG-999</span></div>
+<div class='pill' draggable='true' data-group='ULST'>+ <span class='pillLabel' contenteditable='true' label='Intro to Physical & Cultural Geography'>GEOG-221</span></div>
+<div class='pill' draggable='true' data-group='ULST'>+ <span class='pillLabel' contenteditable='true' label='The World to 1750'>HIST-103</span></div>
+<div class='pill' draggable='true' data-group='ULST'>+ <span class='pillLabel' contenteditable='true' label='The World Since 1750'>HIST-104</span></div>
+<div class='pill' draggable='true' data-group='ULST'>+ <span class='pillLabel' contenteditable='true' label='Special Topics'>HIST-200</span></div>
+<div class='pill' draggable='true' data-group='ULST'>+ <span class='pillLabel' contenteditable='true' label='Black Legacy Series'>HIST-205</span></div>
+<div class='pill' draggable='true' data-group='ULST'>+ <span class='pillLabel' contenteditable='true' label='United States to the Civil War'>HIST-221</span></div>
+<div class='pill' draggable='true' data-group='ULST'>+ <span class='pillLabel' contenteditable='true' label='U.S. Since Civil War'>HIST-222</span></div>
+<div class='pill' draggable='true' data-group='ULST'>+ <span class='pillLabel' contenteditable='true' label='The American Presidency'>HIST-282</span></div>
+<div class='pill' draggable='true' data-group='ULST'>+ <span class='pillLabel' contenteditable='true' label='Women & Gender to 1865'>HIST-283</span></div>
+<div class='pill' draggable='true' data-group='ULST'>+ <span class='pillLabel' contenteditable='true' label='Women & Gender Since 1865'>HIST-284</span></div>
+<div class='pill' draggable='true' data-group='ULST'>+ <span class='pillLabel' contenteditable='true' label='Hist Health&med Thru Race&gend'>HIST-285</span></div>
+<div class='pill' draggable='true' data-group='ULST'>+ <span class='pillLabel' contenteditable='true' label='1960s America'>HIST-325</span></div>
+<div class='pill' draggable='true' data-group='ULST'>+ <span class='pillLabel' contenteditable='true' label='Jim Crow America'>HIST-330</span></div>
+<div class='pill' draggable='true' data-group='ULST'>+ <span class='pillLabel' contenteditable='true' label='United States in the Twentieth Century'>HIST-378</span></div>
+<div class='pill' draggable='true' data-group='ULST'>+ <span class='pillLabel' contenteditable='true' label='African American History I'>HIST-383</span></div>
+<div class='pill' draggable='true' data-group='ULST'>+ <span class='pillLabel' contenteditable='true' label='African American History II'>HIST-384</span></div>
+<div class='pill' draggable='true' data-group='ULST'>+ <span class='pillLabel' contenteditable='true' label='Special Topics'>HIST-385</span></div>
+<div class='pill' draggable='true' data-group='ULST'>+ <span class='pillLabel' contenteditable='true' label='Independent Study'>HIST-490</span></div>
+<div class='pill' draggable='true' data-group='ULST'>+ <span class='pillLabel' contenteditable='true' label='Humans & the Environment'>HUM-101</span></div>
+<div class='pill' draggable='true' data-group='ULST'>+ <span class='pillLabel' contenteditable='true' label='The Ireland Experience'>HUM-105</span></div>
+<div class='pill' draggable='true' data-group='ULST'>+ <span class='pillLabel' contenteditable='true' label='Special Topics in Interdisciplinary Stud'>HUM-201</span></div>
+<div class='pill' draggable='true' data-group='ULST'>+ <span class='pillLabel' contenteditable='true' label='Literature Elective'>LIT-999</span></div>
+<div class='pill' draggable='true' data-group='ULST'>+ <span class='pillLabel' contenteditable='true' label='Humans & the Environment'>LS-101</span></div>
+<div class='pill' draggable='true' data-group='ULST'>+ <span class='pillLabel' contenteditable='true' label='Special Topics in Interdisciplinary Stud'>LS-201</span></div>
+<div class='pill' draggable='true' data-group='ULST'>+ <span class='pillLabel' contenteditable='true' label='Internship'>LS-349</span></div>
+<div class='pill' draggable='true' data-group='ULST'>+ <span class='pillLabel' contenteditable='true' label='Senior Capstone Project'>LS-452</span></div>
+<div class='pill' draggable='true' data-group='ULST'>+ <span class='pillLabel' contenteditable='true' label='Logic'>PHIL-101</span></div>
+<div class='pill' draggable='true' data-group='ULST'>+ <span class='pillLabel' contenteditable='true' label='Philosophy of the Person'>PHIL-113</span></div>
+<div class='pill' draggable='true' data-group='ULST'>+ <span class='pillLabel' contenteditable='true' label='Ethics'>PHIL-154</span></div>
+<div class='pill' draggable='true' data-group='ULST'>+ <span class='pillLabel' contenteditable='true' label='Environmental Ethics'>PHIL-160</span></div>
+<div class='pill' draggable='true' data-group='ULST'>+ <span class='pillLabel' contenteditable='true' label='American Federal Government'>POLS-223</span></div>
+<div class='pill' draggable='true' data-group='ULST'>+ <span class='pillLabel' contenteditable='true' label='Introduction to Religion'>RS-101</span></div>
+<div class='pill' draggable='true' data-group='ULST'>+ <span class='pillLabel' contenteditable='true' label='The Old Testament'>RS-103</span></div>
+<div class='pill' draggable='true' data-group='ULST'>+ <span class='pillLabel' contenteditable='true' label='The Christian Tradition'>RS-109</span></div>
+<div class='pill' draggable='true' data-group='ULST'>+ <span class='pillLabel' contenteditable='true' label='Jesus & the Gospels'>RS-203</span></div>
+<div class='pill' draggable='true' data-group='ULST'>+ <span class='pillLabel' contenteditable='true' label='Religion in America'>RS-210</span></div>
+<div class='pill' draggable='true' data-group='ULST'>+ <span class='pillLabel' contenteditable='true' label='World Religions I'>RS-217</span></div>
+<div class='pill' draggable='true' data-group='ULST'>+ <span class='pillLabel' contenteditable='true' label='African American Religion'>RS-218</span></div>
+<div class='pill' draggable='true' data-group='ULST'>+ <span class='pillLabel' contenteditable='true' label='World Religions II'>RS-219</span></div>
+<div class='pill' draggable='true' data-group='ULST'>+ <span class='pillLabel' contenteditable='true' label='Women and Religion'>RS-236</span></div>
+<div class='pill' draggable='true' data-group='ULST'>+ <span class='pillLabel' contenteditable='true' label='Special Topics'>RS-301</span></div>
+<div class='pill' draggable='true' data-group='ULST'>+ <span class='pillLabel' contenteditable='true' label='Psychology of Religion'>RS-350</span></div>
+<div class='pill' draggable='true' data-group='ULST'>+ <span class='pillLabel' contenteditable='true' label='Religion & Social Justice'>RS-363</span></div>
+<div class='pill' draggable='true' data-group='ULST'>+ <span class='pillLabel' contenteditable='true' label='Sickness, Suffering, and Death'>RS-366</span></div>
+<div class='pill' draggable='true' data-group='ULST'>+ <span class='pillLabel' contenteditable='true' label='Religion, Art, & Visual Cultur'>RS-370</span></div>
+<div class='pill' draggable='true' data-group='ULST'>+ <span class='pillLabel' contenteditable='true' label='Irish Religion and Culture'>RS-375</span></div>
+<div class='pill' draggable='true' data-group='ULST'>+ <span class='pillLabel' contenteditable='true' label='Religious Studies Elective'>RS-999</span></div>
+<div class='pill' draggable='true' data-group='ULST'>+ <span class='pillLabel' contenteditable='true' label='Introduction to Sociology'>SOC-101</span></div>
+<div class='pill' draggable='true' data-group='ULST'>+ <span class='pillLabel' contenteditable='true' label='Urban Sociology'>SOC-200</span></div>
+<div class='pill' draggable='true' data-group='ULST'>+ <span class='pillLabel' contenteditable='true' label='Special Topics in Sociology'>SOC-300</span></div>
+<div class='pill' draggable='true' data-group='ULST'>+ <span class='pillLabel' contenteditable='true' label='Independent Study'>SOC-490</span></div>
+<div class='pill' draggable='true' data-group='ULST'>+ <span class='pillLabel' contenteditable='true' label='Humans & the Environment'>SS-101</span></div>
+<div class='pill' draggable='true' data-group='ULST'>+ <span class='pillLabel' contenteditable='true' label='The Ireland Experience'>SS-105</span></div>
+<div class='pill' draggable='true' data-group='ULST'>+ <span class='pillLabel' contenteditable='true' label='Special Topics in Interdisciplinary Stud'>SS-201</span></div>
+<div class='pill' draggable='true' data-group='ULST'>+ <span class='pillLabel' contenteditable='true' label='Political and Economic Power'>SS-305</span></div>
+<div class='pill' draggable='true' data-group='ULST'>+ <span class='pillLabel' contenteditable='true' label='University Studies Elective'>US-999</span></div>
+<div class='pill' draggable='true' data-group='UNSC'>+ <span class='pillLabel' contenteditable='true' label='Human Biology'>BIO-104</span></div>
+<div class='pill' draggable='true' data-group='UNSC'>+ <span class='pillLabel' contenteditable='true' label='Biology for the Informed Citizen'>BIO-107</span></div>
+<div class='pill' draggable='true' data-group='UNSC'>+ <span class='pillLabel' contenteditable='true' label='Intro to Biology'>BIO-121</span></div>
+<div class='pill' draggable='true' data-group='UNSC'>+ <span class='pillLabel' contenteditable='true' label='Organismal Biology'>BIO-122</span></div>
+<div class='pill' draggable='true' data-group='UNSC'>+ <span class='pillLabel' contenteditable='true' label='Intro to Biology Lab'>BIO-123</span></div>
+<div class='pill' draggable='true' data-group='UNSC'>+ <span class='pillLabel' contenteditable='true' label='Organismal Biology Lab'>BIO-124</span></div>
+<div class='pill' draggable='true' data-group='UNSC'>+ <span class='pillLabel' contenteditable='true' label='Problem Solving in Natural Sci'>BIO-150</span></div>
+<div class='pill' draggable='true' data-group='UNSC'>+ <span class='pillLabel' contenteditable='true' label='Anatomy & Physiology I'>BIO-251</span></div>
+<div class='pill' draggable='true' data-group='UNSC'>+ <span class='pillLabel' contenteditable='true' label='Anatomy & Physiology II'>BIO-252</span></div>
+<div class='pill' draggable='true' data-group='UNSC'>+ <span class='pillLabel' contenteditable='true' label='Anatomy & Physiology Lab I'>BIO-253</span></div>
+<div class='pill' draggable='true' data-group='UNSC'>+ <span class='pillLabel' contenteditable='true' label='Anatomy & Physiology Lab II'>BIO-254</span></div>
+<div class='pill' draggable='true' data-group='UNSC'>+ <span class='pillLabel' contenteditable='true' label='Introductory Microbiology'>BIO-256</span></div>
+<div class='pill' draggable='true' data-group='UNSC'>+ <span class='pillLabel' contenteditable='true' label='Introductory Microbiology Lab'>BIO-257</span></div>
+<div class='pill' draggable='true' data-group='UNSC'>+ <span class='pillLabel' contenteditable='true' label='Pathophysiology'>BIO-301</span></div>
+<div class='pill' draggable='true' data-group='UNSC'>+ <span class='pillLabel' contenteditable='true' label='Plant Science'>BIO-305</span></div>
+<div class='pill' draggable='true' data-group='UNSC'>+ <span class='pillLabel' contenteditable='true' label='Internship'>BIO-349</span></div>
+<div class='pill' draggable='true' data-group='UNSC'>+ <span class='pillLabel' contenteditable='true' label='Environmental Science'>BIO-359</span></div>
+<div class='pill' draggable='true' data-group='UNSC'>+ <span class='pillLabel' contenteditable='true' label='Genetics'>BIO-369</span></div>
+<div class='pill' draggable='true' data-group='UNSC'>+ <span class='pillLabel' contenteditable='true' label='Special Topics in Biology'>BIO-408</span></div>
+<div class='pill' draggable='true' data-group='UNSC'>+ <span class='pillLabel' contenteditable='true' label='Evolution'>BIO-420</span></div>
+<div class='pill' draggable='true' data-group='UNSC'>+ <span class='pillLabel' contenteditable='true' label='Ecology'>BIO-426</span></div>
+<div class='pill' draggable='true' data-group='UNSC'>+ <span class='pillLabel' contenteditable='true' label='Biology Seminar I'>BIO-447</span></div>
+<div class='pill' draggable='true' data-group='UNSC'>+ <span class='pillLabel' contenteditable='true' label='Bacteriology'>BIO-456</span></div>
+<div class='pill' draggable='true' data-group='UNSC'>+ <span class='pillLabel' contenteditable='true' label='Bacteriology Laboratory'>BIO-457</span></div>
+<div class='pill' draggable='true' data-group='UNSC'>+ <span class='pillLabel' contenteditable='true' label='Cell Biology'>BIO-465</span></div>
+<div class='pill' draggable='true' data-group='UNSC'>+ <span class='pillLabel' contenteditable='true' label='Independent Study'>BIO-490</span></div>
+<div class='pill' draggable='true' data-group='UNSC'>+ <span class='pillLabel' contenteditable='true' label='Independent Research'>BIO-495</span></div>
+<div class='pill' draggable='true' data-group='UNSC'>+ <span class='pillLabel' contenteditable='true' label='Chemistry Around Us'>CHEM-100</span></div>
+<div class='pill' draggable='true' data-group='UNSC'>+ <span class='pillLabel' contenteditable='true' label='Chemistry for the Allied Health Services'>CHEM-106</span></div>
+<div class='pill' draggable='true' data-group='UNSC'>+ <span class='pillLabel' contenteditable='true' label='General Chemistry I'>CHEM-211</span></div>
+<div class='pill' draggable='true' data-group='UNSC'>+ <span class='pillLabel' contenteditable='true' label='General Chemistry II'>CHEM-212</span></div>
+<div class='pill' draggable='true' data-group='UNSC'>+ <span class='pillLabel' contenteditable='true' label='General Chemistry Lab I'>CHEM-221</span></div>
+<div class='pill' draggable='true' data-group='UNSC'>+ <span class='pillLabel' contenteditable='true' label='General Chemistry Lab II'>CHEM-222</span></div>
+<div class='pill' draggable='true' data-group='UNSC'>+ <span class='pillLabel' contenteditable='true' label='Organic Chemistry I'>CHEM-301</span></div>
+<div class='pill' draggable='true' data-group='UNSC'>+ <span class='pillLabel' contenteditable='true' label='Organic Chemistry II'>CHEM-302</span></div>
+<div class='pill' draggable='true' data-group='UNSC'>+ <span class='pillLabel' contenteditable='true' label='Introduction to Biochemistry'>CHEM-306</span></div>
+<div class='pill' draggable='true' data-group='UNSC'>+ <span class='pillLabel' contenteditable='true' label='Organic Chemistry Lab I'>CHEM-311</span></div>
+<div class='pill' draggable='true' data-group='UNSC'>+ <span class='pillLabel' contenteditable='true' label='Organic Chemistry Lab II'>CHEM-312</span></div>
+<div class='pill' draggable='true' data-group='UNSC'>+ <span class='pillLabel' contenteditable='true' label='Chemistry Elective'>CHEM-999</span></div>
+<div class='pill' draggable='true' data-group='UNSC'>+ <span class='pillLabel' contenteditable='true' label='Living Green'>ENVS-101</span></div>
+<div class='pill' draggable='true' data-group='UNSC'>+ <span class='pillLabel' contenteditable='true' label='Geography Elective'>GEOG-999</span></div>
+<div class='pill' draggable='true' data-group='UNSC'>+ <span class='pillLabel' contenteditable='true' label='Intermediate Concepts in Algebra'>MATH-104</span></div>
+<div class='pill' draggable='true' data-group='UNSC'>+ <span class='pillLabel' contenteditable='true' label='Quantitative Reasoning'>MATH-106</span></div>
+<div class='pill' draggable='true' data-group='UNSC'>+ <span class='pillLabel' contenteditable='true' label='College Algebra'>MATH-113</span></div>
+<div class='pill' draggable='true' data-group='UNSC'>+ <span class='pillLabel' contenteditable='true' label='Precalculus'>MATH-115</span></div>
+<div class='pill' draggable='true' data-group='UNSC'>+ <span class='pillLabel' contenteditable='true' label='Advanced Math for Nat Science'>MATH-120</span></div>
+<div class='pill' draggable='true' data-group='UNSC'>+ <span class='pillLabel' contenteditable='true' label='Finite Mathematics'>MATH-152</span></div>
+<div class='pill' draggable='true' data-group='UNSC'>+ <span class='pillLabel' contenteditable='true' label='Math for Elementary Education I'>MATH-201</span></div>
+<div class='pill' draggable='true' data-group='UNSC'>+ <span class='pillLabel' contenteditable='true' label='Math for Elementary Education II'>MATH-203</span></div>
+<div class='pill' draggable='true' data-group='UNSC'>+ <span class='pillLabel' contenteditable='true' label='Statistical Techniques'>MATH-231</span></div>
+<div class='pill' draggable='true' data-group='UNSC'>+ <span class='pillLabel' contenteditable='true' label='Calculus I'>MATH-252</span></div>
+<div class='pill' draggable='true' data-group='UNSC'>+ <span class='pillLabel' contenteditable='true' label='Fundamentals of Calculus I'>MATH-253</span></div>
+<div class='pill' draggable='true' data-group='UNSC'>+ <span class='pillLabel' contenteditable='true' label='Fundamentals of Calculus II'>MATH-254</span></div>
+<div class='pill' draggable='true' data-group='UNSC'>+ <span class='pillLabel' contenteditable='true' label='Calculus III'>MATH-301</span></div>
+<div class='pill' draggable='true' data-group='UNSC'>+ <span class='pillLabel' contenteditable='true' label='Calculus IV'>MATH-302</span></div>
+<div class='pill' draggable='true' data-group='UNSC'>+ <span class='pillLabel' contenteditable='true' label='Modern Geometry'>MATH-351</span></div>
+<div class='pill' draggable='true' data-group='UNSC'>+ <span class='pillLabel' contenteditable='true' label='Math Elective'>MATH-399</span></div>
+<div class='pill' draggable='true' data-group='UNSC'>+ <span class='pillLabel' contenteditable='true' label='Problem-Solving for Teachers'>MATH-452</span></div>
+<div class='pill' draggable='true' data-group='UNSC'>+ <span class='pillLabel' contenteditable='true' label='Probability Theory'>MATH-461</span></div>
+<div class='pill' draggable='true' data-group='UNSC'>+ <span class='pillLabel' contenteditable='true' label='Mathematical Statistics'>MATH-462</span></div>
+<div class='pill' draggable='true' data-group='UNSC'>+ <span class='pillLabel' contenteditable='true' label='Independent Study'>MATH-490</span></div>
+<div class='pill' draggable='true' data-group='UNSC'>+ <span class='pillLabel' contenteditable='true' label='Mathematics Elective'>MATH-999</span></div>
+<div class='pill' draggable='true' data-group='UNSC'>+ <span class='pillLabel' contenteditable='true' label='Fundamentals of Physical Science I'>PHSC-101</span></div>
+<div class='pill' draggable='true' data-group='UNSC'>+ <span class='pillLabel' contenteditable='true' label='Fundamentals of Earth Science'>PHSC-102</span></div>
+<div class='pill' draggable='true' data-group='UNSC'>+ <span class='pillLabel' contenteditable='true' label='Physics for Rehabilitation Sciences'>PHYS-204</span></div>
+<div class='pill' draggable='true' data-group='UNSC'>+ <span class='pillLabel' contenteditable='true' label='Classical Physics I'>PHYS-311</span></div>
+<div class='pill' draggable='true' data-group='UNSC'>+ <span class='pillLabel' contenteditable='true' label='Classical Physics II'>PHYS-312</span></div>
+<div class='pill' draggable='true' data-group='UNSC'>+ <span class='pillLabel' contenteditable='true' label='Classical Physics I Lab'>PHYS-321</span></div>
+<div class='pill' draggable='true' data-group='UNSC'>+ <span class='pillLabel' contenteditable='true' label='Classical Physics II Lab'>PHYS-322</span></div>
+<div class='pill' draggable='true' data-group='UNSC'>+ <span class='pillLabel' contenteditable='true' label='Physics Elective'>PHYS-999</span></div>
+<div class='pill' draggable='true' data-group='UNUR'>+ <span class='pillLabel' contenteditable='true' label='Intro to Nursing'>NURS-301</span></div>
+<div class='pill' draggable='true' data-group='UNUR'>+ <span class='pillLabel' contenteditable='true' label='Intro to Nursing Concepts'>NURS-305</span></div>
+<div class='pill' draggable='true' data-group='UNUR'>+ <span class='pillLabel' contenteditable='true' label='Health Assessment'>NURS-315</span></div>
+<div class='pill' draggable='true' data-group='UNUR'>+ <span class='pillLabel' contenteditable='true' label='Nursing I'>NURS-325</span></div>
+<div class='pill' draggable='true' data-group='UNUR'>+ <span class='pillLabel' contenteditable='true' label='Nursing II'>NURS-330</span></div>
+<div class='pill' draggable='true' data-group='UNUR'>+ <span class='pillLabel' contenteditable='true' label='Maternal-Newborn Nursing'>NURS-346</span></div>
+<div class='pill' draggable='true' data-group='UNUR'>+ <span class='pillLabel' contenteditable='true' label='Nursing Care of Children'>NURS-347</span></div>
+<div class='pill' draggable='true' data-group='UNUR'>+ <span class='pillLabel' contenteditable='true' label='Nursing Pharmacology'>NURS-362</span></div>
+<div class='pill' draggable='true' data-group='UNUR'>+ <span class='pillLabel' contenteditable='true' label='Population Health'>NURS-385</span></div>
+<div class='pill' draggable='true' data-group='UNUR'>+ <span class='pillLabel' contenteditable='true' label='Nursing III'>NURS-425</span></div>
+<div class='pill' draggable='true' data-group='UNUR'>+ <span class='pillLabel' contenteditable='true' label='Nurse As a Leader'>NURS-470</span></div>
+<div class='pill' draggable='true' data-group='UNUR'>+ <span class='pillLabel' contenteditable='true' label='Dimensions of Mental Health Nursing'>NURS-482</span></div>
+<div class='pill' draggable='true' data-group='UNUR'>+ <span class='pillLabel' contenteditable='true' label='Independent Study in Nursing'>NURS-489</span></div>
+<div class='pill' draggable='true' data-group='UNUR'>+ <span class='pillLabel' contenteditable='true' label='Transition to Prof Nurs Pract'>NURS-495</span></div>
+<div class='pill' draggable='true' data-group='UNURR'>+ <span class='pillLabel' contenteditable='true' label='Research and Evidence Based Practice'>NURS-322</span></div>
+<div class='pill' draggable='true' data-group='UNURR'>+ <span class='pillLabel' contenteditable='true' label='Leadership in Healthcare Delivery'>NURS-345</span></div>
+<div class='pill' draggable='true' data-group='UNURR'>+ <span class='pillLabel' contenteditable='true' label='Health Promo/D Preven A/Life'>NURS-420</span></div>
+<div class='pill' draggable='true' data-group='UNURR'>+ <span class='pillLabel' contenteditable='true' label='U.S. Health Care System'>NURS-445</span></div>
+<div class='pill' draggable='true' data-group='UNURR'>+ <span class='pillLabel' contenteditable='true' label='Healthcare Policy'>NURS-455</span></div>
+<div class='pill' draggable='true' data-group='UNURR'>+ <span class='pillLabel' contenteditable='true' label='RN to BSN Capstone Experience'>NURS-465</span></div>
+<div class='pill' draggable='true' data-group='UNURR'>+ <span class='pillLabel' contenteditable='true' label='Professional Issues'>NURS-468</span></div>
+<div class='pill' draggable='true' data-group='UNURR'>+ <span class='pillLabel' contenteditable='true' label='Population Centered Care'>NURS-472</span></div>
+<div class='pill' draggable='true' data-group='UNURR'>+ <span class='pillLabel' contenteditable='true' label='Prin. and Appli. of Nursing Technologies'>NURS-483</span></div>
+<div class='pill' draggable='true' data-group='UPSY'>+ <span class='pillLabel' contenteditable='true' label='Psychological Systems'>PSY-103</span></div>
+<div class='pill' draggable='true' data-group='UPSY'>+ <span class='pillLabel' contenteditable='true' label='Life Span Development'>PSY-202</span></div>
+<div class='pill' draggable='true' data-group='UPSY'>+ <span class='pillLabel' contenteditable='true' label='Experimental Procedures'>PSY-204</span></div>
+<div class='pill' draggable='true' data-group='UPSY'>+ <span class='pillLabel' contenteditable='true' label='Psychology Elective'>PSY-299</span></div>
+<div class='pill' draggable='true' data-group='UPSY'>+ <span class='pillLabel' contenteditable='true' label='Child and Adolescent Development'>PSY-303</span></div>
+<div class='pill' draggable='true' data-group='UPSY'>+ <span class='pillLabel' contenteditable='true' label='General Psych for Hlth Sci'>PSY-305</span></div>
+<div class='pill' draggable='true' data-group='UPSY'>+ <span class='pillLabel' contenteditable='true' label='Psychology of Creativity'>PSY-320</span></div>
+<div class='pill' draggable='true' data-group='UPSY'>+ <span class='pillLabel' contenteditable='true' label='Environmental Psychology'>PSY-321</span></div>
+<div class='pill' draggable='true' data-group='UPSY'>+ <span class='pillLabel' contenteditable='true' label='Introduction to Evolutionary Psychology'>PSY-325</span></div>
+<div class='pill' draggable='true' data-group='UPSY'>+ <span class='pillLabel' contenteditable='true' label='Human Sexuality'>PSY-330</span></div>
+<div class='pill' draggable='true' data-group='UPSY'>+ <span class='pillLabel' contenteditable='true' label='Child Psychopathology'>PSY-335</span></div>
+<div class='pill' draggable='true' data-group='UPSY'>+ <span class='pillLabel' contenteditable='true' label='The Psychology of Gender'>PSY-337</span></div>
+<div class='pill' draggable='true' data-group='UPSY'>+ <span class='pillLabel' contenteditable='true' label='Psychology of Religion'>PSY-350</span></div>
+<div class='pill' draggable='true' data-group='UPSY'>+ <span class='pillLabel' contenteditable='true' label='Adult Development'>PSY-355</span></div>
+<div class='pill' draggable='true' data-group='UPSY'>+ <span class='pillLabel' contenteditable='true' label='Learning and Cognition'>PSY-359</span></div>
+<div class='pill' draggable='true' data-group='UPSY'>+ <span class='pillLabel' contenteditable='true' label='Special Topics in Psychology'>PSY-360</span></div>
+<div class='pill' draggable='true' data-group='UPSY'>+ <span class='pillLabel' contenteditable='true' label='Careers in Psychology'>PSY-375</span></div>
+<div class='pill' draggable='true' data-group='UPSY'>+ <span class='pillLabel' contenteditable='true' label='Community Psychology'>PSY-380</span></div>
+<div class='pill' draggable='true' data-group='UPSY'>+ <span class='pillLabel' contenteditable='true' label='Cross Cultural Psychology'>PSY-395</span></div>
+<div class='pill' draggable='true' data-group='UPSY'>+ <span class='pillLabel' contenteditable='true' label='Industrial & Organization Psychology'>PSY-405</span></div>
+<div class='pill' draggable='true' data-group='UPSY'>+ <span class='pillLabel' contenteditable='true' label='Applied Behavior Analysis'>PSY-420</span></div>
+<div class='pill' draggable='true' data-group='UPSY'>+ <span class='pillLabel' contenteditable='true' label='Addiction Screening Assessmet Trt Planng'>PSY-421</span></div>
+<div class='pill' draggable='true' data-group='UPSY'>+ <span class='pillLabel' contenteditable='true' label='Exploring Issues in Forensic Psychology'>PSY-430</span></div>
+<div class='pill' draggable='true' data-group='UPSY'>+ <span class='pillLabel' contenteditable='true' label='Contemporary Clinical Psychology'>PSY-450</span></div>
+<div class='pill' draggable='true' data-group='UPSY'>+ <span class='pillLabel' contenteditable='true' label='Theories of Personality'>PSY-457</span></div>
+<div class='pill' draggable='true' data-group='UPSY'>+ <span class='pillLabel' contenteditable='true' label='Abnormal Psychology'>PSY-458</span></div>
+<div class='pill' draggable='true' data-group='UPSY'>+ <span class='pillLabel' contenteditable='true' label='History of Psychology'>PSY-464</span></div>
+<div class='pill' draggable='true' data-group='UPSY'>+ <span class='pillLabel' contenteditable='true' label='Social Psychology'>PSY-465</span></div>
+<div class='pill' draggable='true' data-group='UPSY'>+ <span class='pillLabel' contenteditable='true' label='Fundamentals of Counseling'>PSY-471</span></div>
+<div class='pill' draggable='true' data-group='UPSY'>+ <span class='pillLabel' contenteditable='true' label='Senior Capstone in Psych'>PSY-480</span></div>
+<div class='pill' draggable='true' data-group='UPSY'>+ <span class='pillLabel' contenteditable='true' label='Psychology Elective'>PSY-999</span></div>
+<div class='pill' draggable='true' data-group='USWO'>+ <span class='pillLabel' contenteditable='true' label='Intro to Social Justice Work'>SW-204</span></div>
+<div class='pill' draggable='true' data-group='USWO'>+ <span class='pillLabel' contenteditable='true' label='Grassroots Hist U.S. Social Welfare'>SW-206</span></div>
+<div class='pill' draggable='true' data-group='USWO'>+ <span class='pillLabel' contenteditable='true' label='Cornerstone'>SW-208</span></div>
+<div class='pill' draggable='true' data-group='USWO'>+ <span class='pillLabel' contenteditable='true' label='Interdisc Social Change'>SW-230</span></div>
+<div class='pill' draggable='true' data-group='USWO'>+ <span class='pillLabel' contenteditable='true' label='Compassionate Social Justice'>SW-240</span></div>
+<div class='pill' draggable='true' data-group='USWO'>+ <span class='pillLabel' contenteditable='true' label='Child Abuse and Neglect'>SW-257</span></div>
+<div class='pill' draggable='true' data-group='USWO'>+ <span class='pillLabel' contenteditable='true' label='Contemporary Issues'>SW-271</span></div>
+<div class='pill' draggable='true' data-group='USWO'>+ <span class='pillLabel' contenteditable='true' label='Oppression and Privilege'>SW-310</span></div>
+<div class='pill' draggable='true' data-group='USWO'>+ <span class='pillLabel' contenteditable='true' label='Applied Ethics for Helping Profssnls'>SW-330</span></div>
+<div class='pill' draggable='true' data-group='USWO'>+ <span class='pillLabel' contenteditable='true' label='Microskills for Professional Helpers'>SW-341</span></div>
+<div class='pill' draggable='true' data-group='USWO'>+ <span class='pillLabel' contenteditable='true' label='Womb to Tomb: Human Experience'>SW-346</span></div>
+<div class='pill' draggable='true' data-group='USWO'>+ <span class='pillLabel' contenteditable='true' label='Takes a Village: Under the Human Journey'>SW-347</span></div>
+<div class='pill' draggable='true' data-group='USWO'>+ <span class='pillLabel' contenteditable='true' label='Research for Social Work'>SW-350</span></div>
+<div class='pill' draggable='true' data-group='USWO'>+ <span class='pillLabel' contenteditable='true' label='Child Abuse and Neglect'>SW-357</span></div>
+<div class='pill' draggable='true' data-group='USWO'>+ <span class='pillLabel' contenteditable='true' label='Child Welfare Skills and Interventions'>SW-359</span></div>
+<div class='pill' draggable='true' data-group='USWO'>+ <span class='pillLabel' contenteditable='true' label='Current Issues in Social Work Practice'>SW-371</span></div>
+<div class='pill' draggable='true' data-group='USWO'>+ <span class='pillLabel' contenteditable='true' label='Social Justice Persp on Hiv/Aids'>SW-385</span></div>
+<div class='pill' draggable='true' data-group='USWO'>+ <span class='pillLabel' contenteditable='true' label='Spirituality & Addiction'>SW-400</span></div>
+<div class='pill' draggable='true' data-group='USWO'>+ <span class='pillLabel' contenteditable='true' label='Capstone'>SW-408</span></div>
+<div class='pill' draggable='true' data-group='USWO'>+ <span class='pillLabel' contenteditable='true' label='Trauma & Addiction'>SW-410</span></div>
+<div class='pill' draggable='true' data-group='USWO'>+ <span class='pillLabel' contenteditable='true' label='Addictions in Society'>SW-420</span></div>
+<div class='pill' draggable='true' data-group='USWO'>+ <span class='pillLabel' contenteditable='true' label='Addiction Scrng, Assmt, Trtmnt Planning'>SW-421</span></div>
+<div class='pill' draggable='true' data-group='USWO'>+ <span class='pillLabel' contenteditable='true' label='Motivational Intrvwg for Addiction'>SW-422</span></div>
+<div class='pill' draggable='true' data-group='USWO'>+ <span class='pillLabel' contenteditable='true' label='Cognitive Behavioral Therapy for Addictn'>SW-423</span></div>
+<div class='pill' draggable='true' data-group='USWO'>+ <span class='pillLabel' contenteditable='true' label='12 Step & Help Grps in Addction Treatmen'>SW-424</span></div>
+<div class='pill' draggable='true' data-group='USWO'>+ <span class='pillLabel' contenteditable='true' label='Case Management With Substance Abusers'>SW-425</span></div>
+<div class='pill' draggable='true' data-group='USWO'>+ <span class='pillLabel' contenteditable='true' label='Clinical Supervision Substance Misuse Tr'>SW-426</span></div>
+<div class='pill' draggable='true' data-group='USWO'>+ <span class='pillLabel' contenteditable='true' label='Crisis Intervention'>SW-427</span></div>
+<div class='pill' draggable='true' data-group='USWO'>+ <span class='pillLabel' contenteditable='true' label='Consultation and Record Keeping'>SW-428</span></div>
+<div class='pill' draggable='true' data-group='USWO'>+ <span class='pillLabel' contenteditable='true' label='Counseling & Addictions'>SW-435</span></div>
+<div class='pill' draggable='true' data-group='USWO'>+ <span class='pillLabel' contenteditable='true' label='Social Work Intervention II'>SW-441</span></div>
+<div class='pill' draggable='true' data-group='USWO'>+ <span class='pillLabel' contenteditable='true' label='Social Work Intrvtn III'>SW-451</span></div>
+<div class='pill' draggable='true' data-group='USWO'>+ <span class='pillLabel' contenteditable='true' label='Social Welfare Policy'>SW-455</span></div>
+<div class='pill' draggable='true' data-group='USWO'>+ <span class='pillLabel' contenteditable='true' label='Applied Research'>SW-456</span></div>
+<div class='pill' draggable='true' data-group='USWO'>+ <span class='pillLabel' contenteditable='true' label='Practicum I'>SW-471</span></div>
+<div class='pill' draggable='true' data-group='USWO'>+ <span class='pillLabel' contenteditable='true' label='Integrating Seminar I'>SW-472</span></div>
+<div class='pill' draggable='true' data-group='USWO'>+ <span class='pillLabel' contenteditable='true' label='Practicum II'>SW-476</span></div>
+<div class='pill' draggable='true' data-group='USWO'>+ <span class='pillLabel' contenteditable='true' label='Integrating Seminar II'>SW-477</span></div>
+                </div>
+
+                <div class="drop-container">
+                    <div></div>
+                    <div class="drop-label" data-time="X" data-season="Fall1" contenteditable="true">Fall 1</div>
+                    <div class="drop-label" data-time="X" data-season="Fall2" contenteditable="true">Fall 2</div>
+                    <div class="drop-label" data-time="X" data-season="Spring1" contenteditable="true">Spring 1</div>
+                    <div class="drop-label" data-time="X" data-season="Spring2" contenteditable="true">Spring 2</div>
+                    <div class="drop-label" data-time="X" data-season="Summer" contenteditable="true">Summer</div>
+
+                    <div class="drop-label" data-time="AM1" data-season="X" contenteditable="true">AM 1</div>
+                    <div class="drop-box fa" data-time="AM1" data-season="Fall1"></div>
+                    <div class="drop-box fa" data-time="AM1" data-season="Fall2"></div>
+                    <div class="drop-box sp" data-time="AM1" data-season="Spring1"></div>
+                    <div class="drop-box sp" data-time="AM1" data-season="Spring2"></div>
+                    <div class="drop-box su" data-time="AM1" data-season="Summer"></div>
+
+                    <div class="drop-label" data-time="AM2" data-season="X" contenteditable="true">AM 2</div>
+                    <div class="drop-box fa" data-time="AM2" data-season="Fall1"></div>
+                    <div class="drop-box fa" data-time="AM2" data-season="Fall2"></div>
+                    <div class="drop-box sp" data-time="AM2" data-season="Spring1"></div>
+                    <div class="drop-box sp" data-time="AM2" data-season="Spring2"></div>
+                    <div class="drop-box su" data-time="AM2" data-season="Summer"></div>
+
+                    <div class="drop-label" data-time="AM3" data-season="X" contenteditable="true">AM 3</div>
+                    <div class="drop-box fa" data-time="AM3" data-season="Fall1"></div>
+                    <div class="drop-box fa" data-time="AM3" data-season="Fall2"></div>
+                    <div class="drop-box sp" data-time="AM3" data-season="Spring1"></div>
+                    <div class="drop-box sp" data-time="AM3" data-season="Spring2"></div>
+                    <div class="drop-box su" data-time="AM3" data-season="Summer"></div>
+
+                    <div class="drop-label" data-time="PM1" data-season="X" contenteditable="true">PM 1</div>
+                    <div class="drop-box fa" data-time="PM1" data-season="Fall1"></div>
+                    <div class="drop-box fa" data-time="PM1" data-season="Fall2"></div>
+                    <div class="drop-box sp" data-time="PM1" data-season="Spring1"></div>
+                    <div class="drop-box sp" data-time="PM1" data-season="Spring2"></div>
+                    <div class="drop-box su" data-time="PM1" data-season="Summer"></div>
+
+                    <div class="drop-label" data-time="PM2" data-season="X" contenteditable="true">PM 2</div>
+                    <div class="drop-box fa" data-time="PM2" data-season="Fall1"></div>
+                    <div class="drop-box fa" data-time="PM2" data-season="Fall2"></div>
+                    <div class="drop-box sp" data-time="PM2" data-season="Spring1"></div>
+                    <div class="drop-box sp" data-time="PM2" data-season="Spring2"></div>
+                    <div class="drop-box su" data-time="PM2" data-season="Summer"></div>
+
+		    <div class="drop-label" data-time="OL" data-season="X" contenteditable="true">Online</div>
+                    <div class="drop-box fa" data-time="OL" data-season="Fall1"></div>
+                    <div class="drop-box fa" data-time="OL" data-season="Fall2"></div>
+                    <div class="drop-box sp" data-time="OL" data-season="Spring1"></div>
+                    <div class="drop-box sp" data-time="OL" data-season="Spring2"></div>
+                    <div class="drop-box su" data-time="OL" data-season="Summer"></div>
+
+                </div>
+            </div>
+        </div>
+    </div>
     <script src="js/script.js"></script>
 </body>
 </html>
